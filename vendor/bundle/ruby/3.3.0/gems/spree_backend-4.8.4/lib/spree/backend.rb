@@ -1,0 +1,23 @@
+require 'spree_core'
+require 'spree_api'
+
+require 'sprockets/railtie'
+
+require 'importmap-rails'
+require 'jquery-rails'
+require 'jquery-ui-rails'
+require 'select2-rails'
+require 'flatpickr'
+require 'flag-icons-rails'
+require 'bootstrap'
+require 'glyphicons'
+require 'turbo-rails'
+require 'stimulus-rails'
+require 'inline_svg'
+require 'responders'
+require 'requestjs-rails'
+require 'tinymce-rails'
+
+require 'spree/backend/action_callbacks'
+require 'spree/backend/callbacks'
+require 'spree/backend/engine'

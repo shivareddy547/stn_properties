@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/apartment_management.iml" filepath="$PROJECT_DIR$/.idea/apartment_management.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../shiva/travel_rooms/.idea/travel_rooms.iml" filepath="$PROJECT_DIR$/../shiva/travel_rooms/.idea/travel_rooms.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,7 @@
+**/vendor/**
+**/dummy/**
+*-min.js
+*.min.js
+jquery*.js
+app/assets/javascripts
+

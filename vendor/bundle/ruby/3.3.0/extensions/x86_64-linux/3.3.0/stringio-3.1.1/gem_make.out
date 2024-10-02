@@ -1,0 +1,18 @@
+current directory: /home/shivareddy/apartment_management/vendor/bundle/ruby/3.3.0/gems/stringio-3.1.1/ext/stringio
+/home/shivareddy/.asdf/installs/ruby/3.3.3/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /home/shivareddy/apartment_management/vendor/bundle/ruby/3.3.0/gems/stringio-3.1.1/ext/stringio
+make DESTDIR\= sitearchdir\=./.gem.20240927-82995-xb35mh sitelibdir\=./.gem.20240927-82995-xb35mh clean
+
+current directory: /home/shivareddy/apartment_management/vendor/bundle/ruby/3.3.0/gems/stringio-3.1.1/ext/stringio
+make DESTDIR\= sitearchdir\=./.gem.20240927-82995-xb35mh sitelibdir\=./.gem.20240927-82995-xb35mh
+compiling stringio.c
+linking shared-object stringio.so
+
+current directory: /home/shivareddy/apartment_management/vendor/bundle/ruby/3.3.0/gems/stringio-3.1.1/ext/stringio
+make DESTDIR\= sitearchdir\=./.gem.20240927-82995-xb35mh sitelibdir\=./.gem.20240927-82995-xb35mh install
+/usr/bin/install -c -m 0755 stringio.so ./.gem.20240927-82995-xb35mh
+
+current directory: /home/shivareddy/apartment_management/vendor/bundle/ruby/3.3.0/gems/stringio-3.1.1/ext/stringio
+make DESTDIR\= sitearchdir\=./.gem.20240927-82995-xb35mh sitelibdir\=./.gem.20240927-82995-xb35mh clean

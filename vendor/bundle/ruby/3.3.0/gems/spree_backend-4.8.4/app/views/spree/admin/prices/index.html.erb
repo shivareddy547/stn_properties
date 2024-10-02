@@ -1,0 +1,31 @@
+<%= render partial: 'spree/admin/shared/product_tabs', locals: { current: :prices } %>
+
+<% content_for :page_actions do %>
+  <% prices_actions.items.each do |action| %>
+    <% next unless action.available?(current_ability) %>
+    <%= button_link_to(
+      Spree.t(action.label_translation_key),
+      action.url(@product),
+      class: action.classes,
+      icon: action.icon_key,
+      id: action.id,
+      target: action.target,
+      data: action.data_attributes
+    ) %>
+  <% end if product_actions&.items %>
+<% end %>
+
+<form>
+  <input class="form-control" placeholder="<%= Spree.t('variant_prices_search_placeholder') %>" type="text" id="variant-price-search">
+</form>
+
+<%= form_tag nil, { class: 'form-horizontal' } do %>
+  <div class="my-3">
+    <%= render 'variant_prices', variant: @product.master %>
+  </div>
+  <div class="form-actions" data-hook="buttons">
+    <%= button Spree.t('actions.update'), 'update.svg' %>
+    <span class="or"><%= Spree.t(:or) %></span>
+    <%= button_link_to Spree.t('actions.cancel'), admin_product_path(@product), icon: 'delete.svg' %>
+  </div>
+<% end %>

@@ -1,0 +1,8 @@
+<% content_for :page_title do %>
+  <%= page_header_back_button spree.admin_products_path %>
+  <%= @product.name %>
+<% end %>
+
+<% content_for :page_tabs do %>
+  <%= render partial: 'spree/admin/shared/tabs', locals: { tabs: product_tabs, object: @product, current: current } %>
+<% end %>

@@ -1,0 +1,7 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = true
+[remote "origin"]
+	url = https://github.com/vinsol-spree-contrib/spree_admin_roles_and_access.git
+	tagOpt = --no-tags

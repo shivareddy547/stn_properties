@@ -1,0 +1,66 @@
+<% content_for :page_title do %>
+  <%= Spree.t('admin.webhooks_subscribers.webhooks_subscribers') %>
+<% end %>
+
+<% content_for :page_actions do %>
+  <%= button_link_to Spree.t('admin.webhooks_subscribers.new_webhooks_subscriber'), new_object_url, class: "btn-primary", icon: 'add.svg', id: 'admin_new_webhooks_subscriber_link' %>
+<% end if can?(:create, Spree::Webhooks::Subscriber) %>
+
+<% if @webhooks_subscribers.any? %>
+  <div class="table-responsive border rounded bg-white">
+    <table class="table">
+      <thead class="text-muted">
+      <tr>
+        <th><%= Spree.t('admin.url') %></th>
+        <% if defined?(Spree::Vendor) && can?(:manage, Spree::Vendor) && !current_spree_vendor %>
+          <th><%= Spree.t(:vendor) %></th>
+        <% end %>
+        <th><%= Spree.t('admin.webhooks_subscribers.secret_key') %></th>
+        <th><%= Spree.t('admin.active') %></th>
+        <th><%= Spree.t('admin.webhooks_subscribers.subscriptions') %></th>
+        <th><%= Spree.t('admin.webhooks_subscribers.time_of_last_event') %></th>
+        <th><%= Spree.t('admin.webhooks_subscribers.all_events') %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @webhooks_subscribers.each do |webhooks_subscriber| %>
+        <tr id="<%= spree_dom_id webhooks_subscriber %>">
+          <td><code><%= webhooks_subscriber.url %></code></td>
+          <% if defined?(Spree::Vendor) && can?(:manage, Spree::Vendor) && !current_spree_vendor %>
+            <td>
+              <%= link_to webhooks_subscriber.vendor.name, spree.admin_vendor_path(webhooks_subscriber.vendor) if webhooks_subscriber.vendor.present? %>
+            </td>
+          <% end %>
+          <td>
+          <div class="input-group" data-controller="password-toggle">
+            <%= password_field_tag :password, webhooks_subscriber.secret_key, class: 'form-control unhide text-muted border-0 shadow-none bg-transparent', data: { password_toggle_target: 'unhide' }, readonly: true %>
+            <div class="input-group-append">
+              <%= button_tag class: 'btn btn-link rounded', data: { action: 'click->password-toggle#password' } do %>
+                <%= svg_icon name: "view.svg", width: '14', height: '14' %>
+              <% end %>
+            </div>
+          </div>
+        </td>
+          <td><%= active_badge(webhooks_subscriber.active) %></td>
+          <td><%= webhooks_subscriber.subscriptions&.sort&.join(', ') %></td>
+          <td><%= webhooks_subscriber.events.order(:created_at).last&.created_at %></td>
+          <td><%= link_to Spree.t(:view), admin_webhooks_subscriber_path(webhooks_subscriber) %></td>
+          <td class="actions">
+          <span class="d-flex justify-content-end">
+            <%= link_to_edit(webhooks_subscriber, no_text: true) if can? :edit, webhooks_subscriber %>
+            <%= link_to_delete(webhooks_subscriber, no_text: true) if can? :delete, webhooks_subscriber %>
+          </span>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+  <%= render 'spree/admin/shared/index_table_options', collection: @webhooks_subscribers, simple: true %>
+<% else %>
+  <div class="text-center no-objects-found m-5">
+    <%= Spree.t(:no_resource_found, resource: plural_resource_name(Spree::Webhooks::Subscriber)) %>,
+    <%= link_to(Spree.t(:add_one), new_object_url) if can? :create, Spree::Webhooks::Subscriber %>!
+  </div>
+<% end %>

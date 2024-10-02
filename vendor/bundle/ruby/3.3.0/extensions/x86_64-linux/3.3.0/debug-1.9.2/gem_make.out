@@ -1,0 +1,19 @@
+current directory: /home/shivareddy/apartment_management/vendor/bundle/ruby/3.3.0/gems/debug-1.9.2/ext/debug
+/home/shivareddy/.asdf/installs/ruby/3.3.3/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /home/shivareddy/apartment_management/vendor/bundle/ruby/3.3.0/gems/debug-1.9.2/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20240927-91943-8qdbng sitelibdir\=./.gem.20240927-91943-8qdbng clean
+
+current directory: /home/shivareddy/apartment_management/vendor/bundle/ruby/3.3.0/gems/debug-1.9.2/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20240927-91943-8qdbng sitelibdir\=./.gem.20240927-91943-8qdbng
+compiling debug.c
+compiling iseq_collector.c
+linking shared-object debug/debug.so
+
+current directory: /home/shivareddy/apartment_management/vendor/bundle/ruby/3.3.0/gems/debug-1.9.2/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20240927-91943-8qdbng sitelibdir\=./.gem.20240927-91943-8qdbng install
+/usr/bin/install -c -m 0755 debug.so ./.gem.20240927-91943-8qdbng/debug
+
+current directory: /home/shivareddy/apartment_management/vendor/bundle/ruby/3.3.0/gems/debug-1.9.2/ext/debug
+make DESTDIR\= sitearchdir\=./.gem.20240927-91943-8qdbng sitelibdir\=./.gem.20240927-91943-8qdbng clean

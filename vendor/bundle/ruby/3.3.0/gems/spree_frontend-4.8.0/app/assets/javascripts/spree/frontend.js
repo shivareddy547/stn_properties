@@ -1,0 +1,78 @@
+//= require jquery3
+//= require jquery_ujs
+//= require popper
+//= require bootstrap
+//= require jquery.payment
+//= require cleave
+//= require spree/frontend/main
+//= require polyfill.min
+//= require fetch.umd
+//= require spree/frontend/api/main
+//= require ./lazysizes.config
+//= require lazysizes.min
+//= require accounting.min
+//= require spree/frontend/account
+//= require spree/frontend/api_tokens
+//= require spree/frontend/carousel-noconflict
+//= require spree/frontend/cart
+//= require spree/frontend/locale
+//= require spree/frontend/currency
+//= require spree/frontend/checkout
+//= require spree/frontend/checkout/address
+//= require spree/frontend/checkout/address_book
+//= require spree/frontend/checkout/payment
+//= require spree/frontend/checkout/shipment
+//= require spree/frontend/views/spree/home/product_carousels
+//= require spree/frontend/views/spree/layouts/spree_application
+//= require spree/frontend/views/spree/product/related
+//= require spree/frontend/views/spree/products/cart_form
+//= require spree/frontend/views/spree/products/description
+//= require spree/frontend/views/spree/products/index
+//= require spree/frontend/views/spree/products/modal_carousel
+//= require spree/frontend/views/spree/products/price_filters
+//= require spree/frontend/views/spree/shared/carousel
+//= require spree/frontend/views/spree/shared/carousel/single
+//= require spree/frontend/views/spree/shared/carousel/swipes
+//= require spree/frontend/views/spree/shared/carousel/thumbnails
+//= require spree/frontend/views/spree/shared/delete_address_popup
+//= require spree/frontend/views/spree/shared/mobile_navigation
+//= require spree/frontend/views/spree/shared/nav_bar
+//= require spree/frontend/views/spree/shared/product_added_modal
+//= require spree/frontend/views/spree/shared/quantity_select
+//= require spree/frontend/turbo_scroll_fix
+//= require spree/frontend/main_nav_bar
+//= require spree/frontend/login
+
+Spree.routes.api_tokens = Spree.localizedPathFor('api_tokens')
+Spree.routes.ensure_cart = Spree.localizedPathFor('ensure_cart')
+Spree.routes.api_v2_storefront_cart_apply_coupon_code = Spree.localizedPathFor('api/v2/storefront/cart/apply_coupon_code')
+Spree.routes.api_v2_storefront_cart_remove_coupon_code = function(couponCode) { return Spree.localizedPathFor('api/v2/storefront/cart/remove_coupon_code/' + couponCode) }
+Spree.routes.api_v2_storefront_destroy_credit_card = function(id) { return Spree.localizedPathFor('api/v2/storefront/account/credit_cards/' + id) }
+Spree.routes.product = function(id) { return Spree.localizedPathFor('products/' + id) }
+Spree.routes.product_related = function(id) { return Spree.localizedPathFor('products/' + id + '/related') }
+Spree.routes.product_carousel = function (taxonId) { return Spree.localizedPathFor('product_carousel/' + taxonId) }
+Spree.routes.set_locale = function(locale) { return Spree.localizedPathFor('locale/set?switch_to_locale=' + locale) }
+Spree.routes.set_currency = function(currency) { return Spree.localizedPathFor('currency/set?switch_to_currency=' + currency) }
+
+Spree.clearCache = function () {
+  if (!window.Turbo) { return }
+
+  Turbo.clearCache()
+}
+
+Spree.setCurrency = function (currency) {
+  Spree.clearCache()
+
+  var params = (new URL(window.location)).searchParams
+  if (currency === SPREE_DEFAULT_CURRENCY) {
+    params.delete('currency')
+  } else {
+    params.set('currency', currency)
+  }
+  var queryString = params.toString()
+  if (queryString !== '') { queryString = '?' + queryString }
+
+  SPREE_CURRENCY = currency
+
+  Turbo.visit(window.location.pathname + queryString, { action: 'replace' })
+}

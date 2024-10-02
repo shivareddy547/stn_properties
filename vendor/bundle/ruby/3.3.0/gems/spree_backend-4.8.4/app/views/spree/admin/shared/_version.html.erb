@@ -1,0 +1,14 @@
+<% if spree_admin_show_version? %>
+  <div
+    class="spree-version px-3 py-2"
+    aria-label="Spree Commerce version">
+    <div class="d-flex align-items-center justify-content-between">
+      <span class="text-muted small">
+        <%= link_to Spree.version, "https://github.com/spree/spree/releases/tag/v#{Spree.version}", target: '_blank' %>
+      </span>
+    
+    </div>
+    
+  
+  </div>
+<% end %>

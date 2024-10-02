@@ -1,0 +1,23 @@
+<% if can?(:admin, current_store) %>
+    <span class="d-none d-lg-inline text-light pl-1 pr-2">
+      <%= image_tag('favicon_dark_bg.png', alt: 'Spree Commerce', height: 28) %>
+    </span>
+
+    <a class="px-0 py-1 btn text-light" id="storeSelectorDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+     <span class="d-sm-none"><%= svg_icon name: "store.svg", width: '14', height: '14' %></span>
+     <span class="d-none d-sm-inline"><%= current_store.name %></span> (<%= current_store.code %>) <%= svg_icon name: "chevron-down.svg", width: '12', height: '12', classes: 'ml-1 mb-0' %>
+    </a>
+
+    <div class="dropdown-menu dropdown-menu-left overflow-hidden ml-2" aria-labelledby="storeSelectorDropdown">
+      <% @stores.each do |store| %>
+        <%= store_switcher_link(store) %>
+      <% end %>
+
+      <% if can?(:create, Spree::Store) %>
+        <div class="dropdown-divider"></div>
+        <%= link_to spree.new_admin_store_path, class: 'dropdown-item', id: 'addNewStoreLink' do %>
+          <%= svg_icon name: "plus-circle", width: '14', height: '14' %> <%= Spree.t(:add_new_store) %>
+        <% end %>
+      <% end %>
+    </div>
+<% end %>

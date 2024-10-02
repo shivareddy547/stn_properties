@@ -1,0 +1,41 @@
+<%= render partial: 'spree/admin/shared/order_tabs', locals: { current: :adjustments} %>
+
+<% content_for :page_actions do %>
+  <% adjustments_actions.items.each do |action| %>
+    <% next unless action.available?(current_ability) %>
+    <%= button_link_to(
+      Spree.t(action.label_translation_key),
+      action.url(@order),
+      class: action.classes,
+      icon: action.icon_key
+    ) %>
+  <% end %>
+<% end %>
+
+<% if @adjustments.present? %>
+  <div class="card mb-3">
+    <%= render partial: 'adjustments_table' %>
+  </div>
+<% else %>
+  <div class="text-center m-5">
+    <%= Spree.t(:no_resource_found, resource: plural_resource_name(Spree::Adjustment)) %>
+  </div>
+<% end %>
+
+<% if @order.can_add_coupon? %>
+  <div class="card bg-light mb-3" data-hook="adjustments_new_coupon_code">
+    <div class="card-body">
+      <div class="form-group">
+        <%= text_field_tag "coupon_code", "", placeholder: Spree.t(:coupon_code), class: "form-control" %>
+      </div>
+      <%= button Spree.t(:add_coupon_code), 'add.svg', 'submit', id: "add_coupon_code" %>
+    </div>
+  </div>
+<% end %>
+
+<script>
+  var order_number = '<%= @order.number %>';
+  var order_id = '<%= @order.id %>';
+</script>
+
+<%= render partial: 'spree/admin/shared/order_summary' %>
