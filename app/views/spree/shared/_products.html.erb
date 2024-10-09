@@ -8,7 +8,7 @@
   <div class="row">
     <% cache cache_key_for_products(products) do %>
       <% products.each_with_index do |product, index| %>
-        <div id="product_<%= product.id %>" class="col-sm-4 col-6 mb-3 mb-md-4 pr-sm-0 pr-md-0 pl-md-4 pl-sm-4 <%= index&1 == 0 ? 'pl-0 pr-2' : 'pr-0 pl-2' %>">
+        <div id="product_<%= product.id %>" class="">
           <%= render 'spree/shared/product', product: product, image_class: 'product-component-plp-image' %>
         </div>
       <% end %>
@@ -29,3 +29,378 @@
     </div>
   <% end %>
 </div>
+
+<script>
+  // Get all thumbnail elements
+  // const thumbnails = document.querySelectorAll('.thumbnail');
+
+  // // Get the main image element
+  // const mainImage = document.getElementById('mainImage');
+
+  // // Add hover event listener to each thumbnail
+  // thumbnails.forEach(thumbnail => {
+  //   thumbnail.addEventListener('mouseenter', function() {
+  //     const imgUrl = this.getAttribute('data-img-url'); // Get the URL from data attribute
+  //     mainImage.src = imgUrl; // Change the main image's src to the thumbnail's image
+  //   });
+
+  //   // Optionally, if you want the main image to revert to the original on mouse leave
+  //   thumbnail.addEventListener('mouseleave', function() {
+  //     mainImage.src = "http://localhost:3000/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsiZGF0YSI6NDUsInB1ciI6ImJsb2JfaWQifX0=--35587f28fb04ddf4e83bf8cfcb0d8078c0fa3eb8/eyJfcmFpbHMiOnsiZGF0YSI6eyJmb3JtYXQiOiJwbmciLCJyZXNpemVfdG9fbGltaXQiOlsyNDAsMjQwXX0sInB1ciI6InZhcmlhdGlvbiJ9fQ==--58703dce750b7cf62a803076eaf883cb602ee6fa/HYDRA-RENEWAL-CREAM-Lunalis-Cosmetics-80883198.webp"; // Set this to the original main image URL
+  //   });
+  // });
+
+  // Get all products
+// Get all product containers
+const products = document.querySelectorAll('.product');
+
+// Loop through each product
+products.forEach(product => {
+  const mainImage = product.querySelector('.mainImage img'); // Get the main image for this product
+  const thumbnails = product.querySelectorAll('.thumbnail'); // Get all thumbnails for this product
+
+  // Add hover event listener to each thumbnail
+  thumbnails.forEach(thumbnail => {
+    thumbnail.addEventListener('mouseenter', function() {
+      const imgUrl = this.getAttribute('data-img-url'); // Get the URL from data attribute
+      mainImage.src = imgUrl; // Change the main image's src to the thumbnail's image
+    });
+
+    // Revert to original main image on mouse leave
+    thumbnail.addEventListener('mouseleave', function() {
+      const originalSrc = mainImage.getAttribute('data-original-src'); // Get the original image URL
+      mainImage.src = originalSrc; // Revert to the original main image
+    });
+  });
+});
+
+
+</script>
+<!-- Add this script and CSS for image gallery interaction -->
+<style>
+  .offer-box.more:hover .radio-buttons {
+    display: block;
+  }
+</style>
+<!-- Trigger Button for the Modal -->
+<style>
+  .modal-xl {
+      max-width: 90%;
+  }
+
+  /* Gallery layout */
+  .image-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+  }
+  .image-grid img {
+      margin-bottom: 15px;
+      width: 100%;
+      cursor: pointer;
+  }
+
+  .carousel-item img {
+      width: 100%;
+  }
+
+  .carousel-caption {
+      position: static;
+      padding-top: 10px;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      text-align: center;
+      font-size: 1.2rem;
+  }
+
+  /* Scrollable modal body */
+  .modal-body {
+      overflow-y: auto;
+      max-height: 80vh;
+  }
+
+  /* Right property overview section styling */
+  .property-overview {
+      padding-left: 20px;
+      border-left: 1px solid #ddd;
+  }
+
+  .property-overview h5 {
+      margin-top: 20px;
+  }
+
+  .property-overview p {
+      margin-bottom: 10px;
+  }
+
+  /* Making the property overview scrollable */
+  .scrollable-section {
+      max-height: 75vh;
+      overflow-y: auto;
+  }
+
+  .toggle-view {
+      display: flex;
+      align-items: center;
+  }
+
+  .toggle-view button {
+      margin-right: 15px;
+  }
+
+  /* Tabs styling */
+  .nav-tabs {
+      margin-bottom: 15px;
+  }
+
+  .tab-content .image-grid {
+      display: none;
+  }
+  .tab-content .active-grid {
+      display: flex;
+  }
+
+  /* Align Tabs beside the Toggle Button */
+  .toggle-and-tabs {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  }
+
+  .nav-item {
+      margin-right: 15px;
+  }
+  .carousel-item img {
+    height: 400px; /* Set a fixed height */
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+    width: 100%; /* Makes the image responsive */
+}
+</style>
+
+<script>
+  let currentView = 'gallery'; // Default view is gallery
+
+function toggleView(product_id) {
+    const galleryView = document.querySelector('.tab-content'+product_id);
+    const slideshowView = document.getElementById('slideshowView'+product_id);
+    const toggleButton = document.getElementById('toggleViewButton'+product_id);
+
+    if (currentView === 'gallery') {
+        galleryView.style.display = 'none';
+        slideshowView.classList.remove('d-none');
+        toggleButton.textContent = 'Gallery';
+        currentView = 'slideshow';
+    } else {
+        galleryView.style.display = 'block';
+        slideshowView.classList.add('d-none');
+        toggleButton.textContent = 'Slideshow';
+        currentView = 'gallery';
+    }
+}
+
+// Open the slideshow at the clicked image index
+// Open the slideshow at the clicked image index
+function openSlideshow(index,product_id) {
+    toggleView(product_id); // Switch to slideshow view
+
+    // Bootstrap's carousel instance
+    const carousel = document.getElementById('imageCarousel'+product_id);
+    const carouselInstance = new bootstrap.Carousel(carousel);
+
+    // Go to the specified slide index using Bootstrap's built-in function
+    carouselInstance.to(index);
+}
+
+
+// Switching tabs to show the correct image grid
+// document.querySelectorAll('.nav-link').forEach(function (tabLink) {
+//     tabLink.addEventListener('click', function (e) {
+//         e.preventDefault();
+//         document.querySelectorAll('.tab-pane').forEach(function (pane) {
+//             pane.classList.remove('show', 'active');
+//         });
+//         const targetGrid = document.querySelector(this.getAttribute('href'));
+//         targetGrid.classList.add('show', 'active');
+//     });
+// });
+
+// Dynamically open modal and update the carousel
+// Dynamically open modal and update the carousel
+document.querySelectorAll('.thumbnail').forEach(function (thumbnail, index) {
+    thumbnail.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        // Get the product ID from the clicked thumbnail
+        const productId = this.getAttribute('data-product-id');
+
+        // Open the modal by adding the 'show' class (Bootstrap 4 behavior)
+        const modal = document.getElementById(`imageGalleryModal${productId}`);
+        modal.classList.add('show');
+        modal.style.display = 'block';
+        modal.setAttribute('aria-hidden', 'false');
+        modal.setAttribute('aria-modal', 'true');
+
+        // Open the clicked image in the slideshow
+        openSlideshow(index,productId);
+    });
+});
+
+// Close the modal
+document.querySelectorAll('.close').forEach(function (closeButton) {
+    closeButton.addEventListener('click', function () {
+        const modal = closeButton.closest('.modal');
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+    });
+});
+
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  var offersSection = document.querySelector('.offer-box.more');
+  var radioButtons = document.querySelector('.radio-buttons');
+  
+  offersSection.addEventListener('mouseenter', function() {
+    radioButtons.style.display = 'block'; // Show the radio buttons on hover
+  });
+
+  offersSection.addEventListener('mouseleave', function() {
+    radioButtons.style.display = 'none'; // Hide the radio buttons when not hovering
+  });
+});
+
+
+  
+</script>
+
+<style>
+.image-grid {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: auto; /* Enables vertical scrolling */
+    max-height: 500px; /* Set a maximum height */
+}
+
+.image-grid .col-md-4 {
+    flex: 0 0 33.33%; /* Adjusts the width of each image */
+    max-width: 33.33%;
+    padding: 5px; /* Add some spacing */
+}
+
+.tab-css {
+    padding: 15px; /* Optional: padding for the tab content */
+}
+.hide{
+  display: none;
+}
+
+.nav-link.active {
+    cursor: default; /* or you can use 'not-allowed' if you want a disabled cursor */
+}
+</style>
+
+
+
+<script>
+  // Show the selected tab and hide others
+  function showTab(tabId, productId) {
+      const tabs = document.querySelectorAll('.tab-pane');
+      tabs.forEach(tab => {
+          tab.classList.remove('show', 'active');
+      });
+      document.getElementById(tabId).classList.add('show', 'active');
+  }
+
+  // Toggle between slideshow and tab views
+  function toggleView(productId) {
+      const slideshowView = document.getElementById(`slideshowView${productId}`);
+      const tabView = document.querySelector(`.tab-content${productId}`);
+      if (slideshowView.classList.contains('d-none')) {
+          slideshowView.classList.remove('d-none');
+          tabView.classList.add('d-none');
+      } else {
+          slideshowView.classList.add('d-none');
+          tabView.classList.remove('d-none');
+      }
+  }
+
+  // Move carousel items
+  function moveCarousel(carouselId, direction) {
+      const carousel = document.getElementById(carouselId);
+      const items = carousel.querySelectorAll('.carousel-item');
+      let currentIndex = Array.from(items).findIndex(item => item.classList.contains('active'));
+      const nextIndex = (currentIndex + direction + items.length) % items.length;
+
+      items[currentIndex].classList.remove('active');
+      items[nextIndex].classList.add('active');
+
+      const indicators = carousel.querySelectorAll('.carousel-indicators li');
+      indicators[currentIndex].classList.remove('active');
+      indicators[nextIndex].classList.add('active');
+  }
+
+  // Show the image in the carousel based on thumbnail click
+  function showImageInCarousel(index, productId) {
+      const carousel = document.getElementById(`imageCarousel${productId}`);
+      const items = carousel.querySelectorAll('.carousel-item');
+      items.forEach((item, idx) => {
+          item.classList.remove('active');
+          if (idx === index) {
+              item.classList.add('active');
+          }
+      });
+
+      const indicators = carousel.querySelectorAll('.carousel-indicators li');
+      indicators.forEach((indicator, idx) => {
+          indicator.classList.remove('active');
+          if (idx === index) {
+              indicator.classList.add('active');
+          }
+      });
+
+      // Reset the carousel to the active item
+      moveCarousel(`imageCarousel${productId}`, 0);
+  }
+</script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const tabs = document.querySelectorAll('.nav-link'); // Select all tab links
+  
+      // Attach event listeners for each tab
+      tabs.forEach(tab => {
+          tab.addEventListener('click', function(event) {
+              event.preventDefault();
+  
+              // Remove active class from all tabs
+              // tabs.forEach(t => t.classList.remove('active'));
+              // tab.classList.add('active');
+  
+              // Hide all tab panes (image galleries)
+              const tabPanes = document.querySelectorAll('.tab-pane.show.active');
+              tabPanes.forEach(pane => {
+                pane.classList.add('hide');
+                  pane.classList.remove('show', 'active');
+                  
+              });
+  
+              // Get the target tab's content ID and activate the corresponding pane
+              const targetTabId = tab.getAttribute('href').substring(1); // Remove the '#' from the ID
+              const targetTabContent = document.getElementById(targetTabId);
+  
+              if (targetTabContent) {
+                  // Activate the target tab pane
+                  targetTabContent.classList.remove('hide');
+                  targetTabContent.classList.add('show', 'active');
+              } else {
+                  console.error(`Tab content with ID ${targetTabId} not found.`);
+              }
+          });
+      });
+  });
+  
+     </script>
