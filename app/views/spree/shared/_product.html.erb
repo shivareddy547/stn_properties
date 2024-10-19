@@ -1,3 +1,40 @@
+
+<style>
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    padding: 20px;
+  }
+
+  .gallery-grid img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+
+  .carousel-item img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+  }
+
+  .property-overview {
+    border-left: 1px solid #ddd;
+    padding: 20px;
+    max-width: 300px;
+  }
+
+  .modal-body {
+    display: flex;
+  }
+
+  .hidden {
+    display: none;
+  }
+</style>
 <div class="row mb-3" style="border: 1px solid #ccc; border-radius: 10px; padding: 0px;">
   
   <!-- Row Header with Notification Text -->
@@ -20,12 +57,12 @@
 <div class="col-4 product">
   <% if product.images.size > 1 %>
     <div class="text-center mainImage">
-      <%= image_tag(main_app.cdn_image_url(product.images[0].url(:product)), class: "main-img-thumbnail  open-modal","data-toggle": "modal", id: "mainImage#{product.id}", "data-modal-target":"#productModal#{product.id}", "data-original-src": main_app.cdn_image_url(product.images[0].url(:product))) %>
+      <%= image_tag(main_app.cdn_image_url(product.images[0].url(:product)), class: "main-img-thumbnail","data-toggle": "modal", id: "mainImage#{product.id}", "data-target":"#imageModal#{product.id}", "data-original-src": main_app.cdn_image_url(product.images[0].url(:product))) %>
     </div>
     
     <div class="d-flex justify-content-between align-items-center mt-3 thumbnails">
       <% product.images.first(4).each_with_index do |i, index| %>
-        <%= link_to image_tag(main_app.cdn_image_url(i.url(:product)), class: "img-fluid img-fluid-thumb thumbnail-img open-modal"), "#", class: "thumbnail open-modal ", "data-product-id": product.id, "data-img-url": main_app.cdn_image_url(i.url(:product)), "data-toggle": "modal", "data-modal-target": "#productModal#{product.id}"%>
+        <%= link_to image_tag(main_app.cdn_image_url(i.url(:product)), class: "img-fluid img-fluid-thumb thumbnail-img"), "#", class: "thumbnail open-modal ", "data-product-id": product.id, "data-img-url": main_app.cdn_image_url(i.url(:product)), "data-toggle": "modal", "data-target": "#imageModal#{product.id}"%>
       <% end %>
     </div>
   <% end %>
@@ -94,24 +131,30 @@
 
 <!-- <button class="btn btn-primary open-modal" data-modal-target="#productModal<%= product.id %>">View Images</button> -->
 
-
 <% img_option_types =  Spree::OptionType.where(id: product.images.map{|a| a.option_type_id}.uniq).order(position: :asc).pluck(:id,:name) %>
-<div class="modal fade" id="productModal<%= product.id %>" tabindex="-1" aria-labelledby="productModal<%= product.id %>Label" aria-hidden="true">
-  <div class="modal-dialog full-width-modal">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="productModal<%= product.id %>Label"></h5>
-            
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+<!-- Modal -->
+<div class="modal fade" id="imageModal<%= product.id %>" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel<%= product.id %>" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalLabel<%= product.id %>">Property Images</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
 
-          </div>
-          <div class="modal-body">
-            <ul class="nav nav-tabs" id="myTab<%= product.id %>" role="tablist">
-              <li class="nav-item">
+        <!-- Left Side: Images -->
+        <div class="flex-grow-1">
+          <!-- Tabs -->
+          <ul class="nav nav-tabs" id="imageTabs<%= product.id %>" role="tablist">
+            <li class="nav-item">
                 <button class="btn btn-secondary toggle-button" id="toggleButton<%= product.id %>">Switch to Slideshow</button>
               </li>
-             
-              <% img_option_types.each_with_index do |each_tab, index| %>
+            <!-- <li class="nav-item">
+              <a class="nav-link active" id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="true">All (72)</a>
+            </li> -->
+            <% img_option_types.each_with_index do |each_tab, index| %>
                 <li class="nav-item">
                   <a class="nav-link <%= index == 0 ? 'active' : ''%>" id="tab<%= product.id %>-<%= index %>-tab" data-bs-toggle="tab" href="#tab<%= product.id %>-<%= index %>" role="tab"
                      aria-controls="tab<%= product.id %>-<%= index %>" aria-selected="true">
@@ -119,152 +162,137 @@
                   </a>
                 </li>
               <% end %>
-            </ul>
-            
-            <!-- Move the "Switch to Slideshow" button outside the tabs, so there is only one -->
-            
-            
-            <div class="tab-content" id="myTabContent<%= product.id %>">
-              <% img_option_types.each_with_index do |each_tab, index| %>
-                <div class="tab-pane fade show <%= index == 0 ? 'active' : ''%>" id="tab<%= product.id %>-<%= index %>" role="tabpanel">
-                  <!-- Grid layout for the gallery -->
-                  <div class="gallery grid-view">
-                    <% product.images.where(option_type_id: each_tab[0]).each do |img| %>
-                      <div class="gallery-item">
-                        <%= image_tag(main_app.cdn_image_url(img.url(:large)), class: 'gallery-image', alt: 'Gallery Image') %>
-                      </div>
-                    <% end %>
-                  </div>
-                </div>
-              <% end %>
+            <!-- Add more tabs as needed -->
+          </ul>
+
+          <!-- Grid & Carousel Toggle Button -->
+          <!-- <button class="btn btn-primary my-3" id="toggleViewBtn">Slideshow</button> -->
+          <div id="carousel<%= product.id %>" class="carousel slide hidden" data-bs-ride="carousel">
+            <div class="carousel-inner" id="carouselImages<%= product.id %>"></div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carousel<%= product.id %>" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carousel<%= product.id %>" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden">Next</span>
+            </button>
+          </div>
+          <!-- Tab Content -->
+          <div class="tab-content" id="myTabContent<%= product.id %>">
+            <!-- All Images Grid -->
+            <% img_option_types.each_with_index do |each_tab, index| %>
+            <div class="tab-pane fade show <%= index == 0 ? 'active' : ''%>" id="tab<%= product.id %>-<%= index %>" role="tabpanel">
+              <!-- Grid layout for the gallery -->
+              <div class="gallery-grid">
+                <% product.images.where(option_type_id: each_tab[0]).each do |img| %>
+                  
+                    <%= image_tag(main_app.cdn_image_url(img.url(:large)), class: 'gallery-image', alt: 'Gallery Image') %>
+                
+                <% end %>
+              </div>
             </div>
+          <% end %>
+
 
             
-            
-            <!-- Carousel, initially hidden -->
-            <div id="carousel<%= product.id %>" class="carousel slide hidden" data-bs-ride="carousel">
-              <div class="carousel-inner" id="carouselImages<%= product.id %>"></div>
-              <button class="carousel-control-prev" type="button" data-bs-target="#carousel<%= product.id %>" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-              </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#carousel<%= product.id %>" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-              </button>
-            </div>
-            
-            <!-- Toggle Button -->
-           
-            
+
+
+          
           </div>
+
+          <!-- Carousel View (Initially Hidden) -->
+        <!-- Carousel, initially hidden -->
+        
+
+          
+        </div>
+
+        <!-- Right Side: Property Overview -->
+        <div class="property-overview">
+          <h5>Property Overview</h5>
+          <p><strong>Nearby Attractions:</strong></p>
+          <ul>
+            <li>Shilparamam Cultural Society (1.42 km)</li>
+            <li>Golconda Fort (7.2 km)</li>
+            <!-- Add more details -->
+          </ul>
+          <p><strong>Dining & Facilities:</strong></p>
+          <ul>
+            <li>Free Wifi</li>
+            <li>Coffee/Tea Maker</li>
+            <!-- Add more details -->
+          </ul>
+        </div>
       </div>
+    </div>
   </div>
 </div>
 
+<!-- Bootstrap and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 <script>
-// Populate carousel with images from the active tab
-function populateCarousel(galleryId, carouselImagesId, clickedImage) {
-    const activeTab = document.querySelector(`#${galleryId}.tab-pane.active`);
-    const images = activeTab.querySelectorAll('.gallery img');
-    const carouselImagesContainer = document.getElementById(carouselImagesId);
-    carouselImagesContainer.innerHTML = ''; // Clear previous images
-
-    images.forEach((img, index) => {
-        const carouselItem = document.createElement('div');
-        carouselItem.className = 'carousel-item' + (img.src === clickedImage.src ? ' active' : '');
-        carouselItem.innerHTML = `<img src="${img.src}" class="d-block w-100" alt="Image ${index + 1}">`;
-        carouselImagesContainer.appendChild(carouselItem);
-    });
-
-    // Reinitialize carousel
-    if ($(carouselImagesContainer).data('bs.carousel')) {
-        $(carouselImagesContainer).carousel('dispose'); // Dispose if already initialized
-    }
-    $(carouselImagesContainer).carousel(); // Reinitialize carousel
-}
-
-// Toggle between gallery (grid view) and carousel views
-function toggleView(galleryId, carouselId, buttonId, clickedImage) {
-    const gallery = document.querySelector(`#${galleryId} .gallery`);
-    const carousel = document.getElementById(carouselId);
-    const isGalleryVisible = !gallery.classList.contains('hidden');
-
-    if (isGalleryVisible) {
-        populateCarousel(galleryId, carouselId.replace('carousel', 'carouselImages'), clickedImage);
-        gallery.classList.add('hidden');
-        carousel.classList.remove('hidden');
-        document.getElementById(buttonId).textContent = 'Switch to Gallery';
-    } else {
-        gallery.classList.remove('hidden');
-        carousel.classList.add('hidden');
-        document.getElementById(buttonId).textContent = 'Switch to Slideshow';
-    }
-}
-
-// Toggle button for switching views
-document.getElementById('toggleButton<%= product.id %>').addEventListener('click', function () {
-    const activeTabId = document.querySelector('#myTab<%= product.id %> .nav-link.active').getAttribute('href').substring(1);
-    const galleryId = activeTabId;
-    const carouselId = `carousel<%= product.id %>`;
-    const clickedImage = document.querySelector(`#${galleryId} .gallery img`);
-    toggleView(galleryId, carouselId, this.id, clickedImage);
-});
-
-// Add click event for each image in the grid to switch to slideshow
-document.querySelectorAll('.gallery img').forEach((image) => {
-    image.addEventListener('click', function () {
-        const activeTabId = this.closest('.tab-pane').id;
-        const galleryId = activeTabId;
-        const carouselId = `carousel<%= product.id %>`;
-        toggleView(galleryId, carouselId, 'toggleButton<%= product.id %>', this);
-    });
-});
-
-</script>
-<style>
-  /* Basic styling for grid view */
-  .grid-view {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px;
+  // Populate carousel with images from the active tab
+  function populateCarousel(galleryId, carouselImagesId, clickedImage) {
+      const activeTab = document.querySelector(`#${galleryId}.tab-pane.active`);
+      const images = activeTab.querySelectorAll('.gallery-grid img');
+      const carouselImagesContainer = document.getElementById(carouselImagesId);
+      carouselImagesContainer.innerHTML = ''; // Clear previous images
+  console.log(33333333)
+  console.log(images)
+      images.forEach((img, index) => {
+          const carouselItem = document.createElement('div');
+          carouselItem.className = 'carousel-item' + (img.src === clickedImage.src ? ' active' : '');
+          carouselItem.innerHTML = `<img src="${img.src}" class="d-block w-100" alt="Image ${index + 1}">`;
+          carouselImagesContainer.appendChild(carouselItem);
+      });
+  
+      // Reinitialize carousel
+      if ($(carouselImagesContainer).data('bs.carousel')) {
+          $(carouselImagesContainer).carousel('dispose'); // Dispose if already initialized
+      }
+      $(carouselImagesContainer).carousel(); // Reinitialize carousel
   }
   
-  .gallery-item {
-    position: relative;
-    overflow: hidden;
-    height: 0;
-    padding-bottom: 75%; /* This maintains a 4:3 aspect ratio for the images */
+  // Toggle between gallery (grid view) and carousel views
+  function toggleView(galleryId, carouselId, buttonId, clickedImage) {
+    console.log(galleryId)
+      const gallery = document.querySelector(`#${galleryId} .gallery-grid`);
+      const carousel = document.getElementById(carouselId);
+      const isGalleryVisible = !gallery.classList.contains('hidden');
+  
+      if (isGalleryVisible) {
+          populateCarousel(galleryId, carouselId.replace('carousel', 'carouselImages'), clickedImage);
+          gallery.classList.add('hidden');
+          carousel.classList.remove('hidden');
+          document.getElementById(buttonId).textContent = 'Switch to Gallery';
+      } else {
+          gallery.classList.remove('hidden');
+          carousel.classList.add('hidden');
+          document.getElementById(buttonId).textContent = 'Switch to Slideshow';
+      }
   }
   
-  .gallery-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* Ensures images fill the container without distortion */
-    cursor: pointer;
-  }
-
-  .full-width-modal {
-  max-width: 100%;
-  /* width: 90%;
-  margin: 0; /* Remove any default margin */
-  /* padding: 15px; */ 
-
-  position: absolute;
-  top: 5%;
-  left: 5%;
-  right: 5%;
-  bottom: 5%;
-  transform: translate(-50%, -50%);
-  width: 80%;
- 
-}
+  // Toggle button for switching views
+  document.getElementById('toggleButton<%= product.id %>').addEventListener('click', function () {
+      const activeTabId = document.querySelector('#imageTabs<%= product.id %> .nav-link.active').getAttribute('href').substring(1);
+      const galleryId = activeTabId;
+      const carouselId = `carousel<%= product.id %>`;
+      const clickedImage = document.querySelector(`#${galleryId} .gallery-grid img`);
+      toggleView(galleryId, carouselId, this.id, clickedImage);
+  });
   
-  .hidden {
-    display: none;
-  }
+  // Add click event for each image in the grid to switch to slideshow
+  document.querySelectorAll('.gallery-grid img').forEach((image) => {
+      image.addEventListener('click', function () {
+          const activeTabId = this.closest('.tab-pane').id;
+          const galleryId = activeTabId;
+          const carouselId = `carousel<%= product.id %>`;
+          toggleView(galleryId, carouselId, 'toggleButton<%= product.id %>', this);
+      });
+  });
   
-  </style>
+  </script>
