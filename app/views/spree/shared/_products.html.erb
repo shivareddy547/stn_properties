@@ -177,6 +177,90 @@ products.forEach(product => {
 }
 </style>
 
+<script>
+  let currentView = 'gallery'; // Default view is gallery
+
+function toggleView(product_id) {
+    const galleryView = document.querySelector('.tab-content'+product_id);
+    const slideshowView = document.getElementById('slideshowView'+product_id);
+    const toggleButton = document.getElementById('toggleViewButton'+product_id);
+
+    if (currentView === 'gallery') {
+        galleryView.style.display = 'none';
+        slideshowView.classList.remove('d-none');
+        toggleButton.textContent = 'Gallery';
+        currentView = 'slideshow';
+    } else {
+        galleryView.style.display = 'block';
+        slideshowView.classList.add('d-none');
+        toggleButton.textContent = 'Slideshow';
+        currentView = 'gallery';
+    }
+}
+
+// Open the slideshow at the clicked image index
+// Open the slideshow at the clicked image index
+// function openSlideshow(index,product_id) {
+//   console.log(11111111)
+//   console.log(product_id)
+//     toggleView(product_id); // Switch to slideshow view
+
+//     // Bootstrap's carousel instance
+//     const carousel = document.getElementById('imageCarousel'+product_id);
+//     const carouselInstance = new bootstrap.Carousel(carousel);
+
+//     // Go to the specified slide index using Bootstrap's built-in function
+//     carouselInstance.to(index);
+// }
+
+
+// Switching tabs to show the correct image grid
+// document.querySelectorAll('.nav-link').forEach(function (tabLink) {
+//     tabLink.addEventListener('click', function (e) {
+//         e.preventDefault();
+//         document.querySelectorAll('.tab-pane').forEach(function (pane) {
+//             pane.classList.remove('show', 'active');
+//         });
+//         const targetGrid = document.querySelector(this.getAttribute('href'));
+//         targetGrid.classList.add('show', 'active');
+//     });
+// });
+
+// Dynamically open modal and update the carousel
+// Dynamically open modal and update the carousel
+// document.querySelectorAll('.thumbnail').forEach(function (thumbnail, index) {
+//     thumbnail.addEventListener('click', function (e) {
+//         e.preventDefault();
+
+//         // Get the product ID from the clicked thumbnail
+//         const productId = this.getAttribute('data-product-id');
+
+//         // Open the modal by adding the 'show' class (Bootstrap 4 behavior)
+//         const modal = document.getElementById(`imageGalleryModal${productId}`);
+//         modal.classList.add('show');
+//         modal.style.display = 'block';
+//         modal.setAttribute('aria-hidden', 'false');
+//         modal.setAttribute('aria-modal', 'true');
+
+//         // Open the clicked image in the slideshow
+//         openSlideshow(index,productId);
+//     });
+// });
+
+// Close the modal
+document.querySelectorAll('.close-button').forEach(function (closeButton) {
+    closeButton.addEventListener('click', function () {
+        const modal = closeButton.closest('.modal');
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+    });
+});
+
+
+
+</script>
+
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -329,21 +413,3 @@ products.forEach(product => {
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-
-
-
-<style>
-    .gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Flexible grid layout */
-  gap: 2px;
-}
-
-.gallery-image {
-  width: 100%; /* Ensure images are responsive within their grid */
-  cursor: pointer; /* Show pointer when hovering over the image */
-}
-
-</style>
-
