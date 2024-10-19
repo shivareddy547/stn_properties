@@ -1,51 +1,201 @@
-<% @body_id = 'product-details' %>
+<!DOCTYPE html>
+<html lang="en">
 
-<div class="container">
-  <%= spree_breadcrumbs(@taxon, '', @product) %>
-</div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Modal with Slideshow</title>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+</head>
 
-<% cache cache_key_for_product do %>
-  <div class="container pt-4 product-details">
-    <div class="row" data-hook="product_show">
-      <%= render partial: 'gallery' %>
-      <div class="col-12 col-md-5" data-hook="product_right_part">
-        <div id="product-description" data-hook="product_right_part_wrap">
-          <h1 class="mt-3 mt-md-0 text-center text-md-left product-details-title">
-            <%= @product.name %>
-          </h1>
-          <div id="cart-form" data-hook="cart_form">
-            <%= render 'cart_form', variant_change_identifier: 'productCarousel' %>
-          </div>
+<body>
+
+    
+    <div class="container mt-5">
+        <h1>Product List</h1>
+        <div class="product-list">
+            <div class="product mb-3" data-product-id="1">
+                <h3>Product 1</h3>
+                <button class="btn btn-primary open-modal" data-modal-target="#productModal1">View Images</button>
+            </div>
+         
         </div>
-      </div>
-    </div>
-    <div class="pb-4 pt-md-5 row" data-hook="product_description">
-      <div class="col-12 col-md-7 col-lg-6">
-        <%= render partial: 'description' %>
-      </div>
-      <div class="d-none d-lg-block col-lg-1"></div>
-      <div class="col-12 col-md-5" data-hook="product_properties">
-        <%= render partial: 'properties' %>
-      </div>
-      <div class="col-12" data-hook="promotions">
-        <%= render partial: 'promotions' %>
-      </div>
     </div>
 
-    <div id="no-product-available" class="no-product-available-dropdown">
-      <%= render partial: 'spree/shared/no_product_available' %>
+    
+    <div class="modal fade" id="productModal1" tabindex="-1" aria-labelledby="productModal1Label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModal1Label">Product 1 Images</h5>
+                    <button type="button" class="btn-close close-button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="myTab1" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="tab1-1-tab" data-bs-toggle="tab" href="#tab1-1" role="tab"
+                                aria-controls="tab1-1" aria-selected="true">Tab 1</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="tab1-2-tab" data-bs-toggle="tab" href="#tab1-2" role="tab"
+                                aria-controls="tab1-2" aria-selected="false">Tab 2</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="tab1-3-tab" data-bs-toggle="tab" href="#tab1-3" role="tab"
+                                aria-controls="tab1-3" aria-selected="false">Tab 3</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent1">
+                        <div class="tab-pane fade show active" id="tab1-1" role="tabpanel">
+                            <div class="gallery">
+                                <img src="https://picsum.photos/seed/J-GQDQ54gV20_W5SjfVXs/512" alt="Image 1.1">
+                                <img src="https://picsum.photos/seed/JL92eOYaJ-90NUWSzt9Uz/512" alt="Image 1.2">
+                            </div>
+                            <button class="btn btn-secondary toggle-button" id="toggleButton1_1">Switch to Slideshow</button>
+                        </div>
+                        <div class="tab-pane fade" id="tab1-2" role="tabpanel">
+                            <div class="gallery">
+                                <img src="https://picsum.photos/seed/3UBBr9ZqA_abY5i76llef/512" alt="Image 2.1">
+                                <img src="https://picsum.photos/seed/GeE-34aVt8Ucqz6UdH13K/512" alt="Image 2.2">
+                            </div>
+                            <button class="btn btn-secondary toggle-button" id="toggleButton1_2">Switch to Slideshow</button>
+                        </div>
+                        <div class="tab-pane fade" id="tab1-3" role="tabpanel">
+                            <div class="gallery">
+                                <img src="https://picsum.photos/seed/l7yjAO8TXZbQOKD4C_Lld/512" alt="Image 3.1">
+                                <img src="https://picsum.photos/seed/yiTz55CvvvMCnZrjfOjsb/512" alt="Image 3.2">
+                            </div>
+                            <button class="btn btn-secondary toggle-button" id="toggleButton1_3">Switch to Slideshow</button>
+                        </div>
+                    </div>
+                    <div id="carousel1" class="carousel slide hidden" data-bs-ride="carousel">
+                        <div class="carousel-inner" id="carouselImages1"></div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carousel1" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carousel1" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <%= render partial: 'gallery_modal' %>
-  </div>
-  <div id="related-products"></div>
+  
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
 
-  <%= products_structured_data([@product]) %>
+</body>
 
-  <%= render 'spree/shared/product_added_modal' %>
-<% end %>
+</html>
 
-<div
-  data-related-products
-  data-related-products-id="<%= @product.slug %>"
-  data-related-products-enabled="<%= @product.respond_to?(:has_related_products?) %>" />
+<script>
+
+        // Populate carousel with images based on the active tab
+        function populateCarousel(galleryId, carouselImagesId, clickedImage) {
+            const activeTab = document.querySelector(`#${galleryId}.tab-pane.active`);
+            const images = activeTab.querySelectorAll('.gallery img');
+            const carouselImagesContainer = document.getElementById(carouselImagesId);
+            carouselImagesContainer.innerHTML = ''; // Clear previous images
+
+            images.forEach((img, index) => {
+                const carouselItem = document.createElement('div');
+                carouselItem.className = 'carousel-item' + (img.src === clickedImage.src ? ' active' : '');
+                carouselItem.innerHTML = `<img src="${img.src}" class="d-block w-100" alt="Image ${index + 1}">`;
+                carouselImagesContainer.appendChild(carouselItem);
+            });
+        }
+
+        // Toggle between gallery and slideshow views
+        function toggleView(galleryId, carouselId, buttonId, clickedImage) {
+            const gallery = document.querySelector(`#${galleryId}.tab-pane.active .gallery`);
+            const carousel = document.getElementById(carouselId);
+            const isGalleryVisible = !gallery.classList.contains('hidden');
+
+            // If gallery is visible, switch to slideshow
+            if (isGalleryVisible) {
+                populateCarousel(galleryId, carouselId.replace('carousel', 'carouselImages'), clickedImage);
+                gallery.classList.add('hidden'); // Hide gallery
+                carousel.classList.remove('hidden'); // Show carousel
+                document.getElementById(buttonId).textContent = 'Switch to Gallery'; // Update button text
+            } else { // Otherwise, switch to gallery
+                gallery.classList.remove('hidden'); // Show gallery
+                carousel.classList.add('hidden'); // Hide carousel
+                document.getElementById(buttonId).textContent = 'Switch to Slideshow'; // Update button text
+            }
+        }
+
+        // Setup event listeners for modal open buttons
+        document.querySelectorAll('.open-modal').forEach(button => {
+            button.addEventListener('click', function () {
+                const modalId = this.getAttribute('data-modal-target');
+                const modal = new bootstrap.Modal(document.querySelector(modalId));
+                modal.show(); // Show the modal
+
+                // Setup toggle button handlers
+                const toggleButtons = document.querySelectorAll(`${modalId} .toggle-button`);
+                toggleButtons.forEach((button) => {
+                    const tabId = button.closest('.tab-pane').id;
+                    const carouselId = `carousel${tabId.charAt(3)}`; // Get the carousel id
+                    button.addEventListener('click', function () {
+                        const clickedImage = button.closest('.tab-pane').querySelector('.gallery img'); // Get the first image if none is initially active
+                        toggleView(tabId, carouselId, this.id, clickedImage); // Pass the clicked image
+                    });
+                });
+
+                // Add click event for images to show in carousel
+                const images = modal.querySelectorAll('.gallery img');
+                images.forEach((image) => {
+                    image.addEventListener('click', function () {
+                        const activeTabId = button.closest('.tab-pane').id;
+                        const carouselId = `carousel${activeTabId.charAt(3)}`; // Get carousel id
+                        toggleView(activeTabId, carouselId, null, this); // Pass clicked image
+                    });
+                });
+            });
+        });
+
+        // Close modal when the close button is clicked
+document.querySelectorAll('.close-button').forEach(button => {
+    button.addEventListener('click', function () {
+        this.closest('.modal').style.display = 'none'; // Hide the modal
+    });
+});
+
+
+        // Handle tab changes for modals
+        document.querySelectorAll('.nav-tabs a').forEach(tab => {
+            tab.addEventListener('click', function (e) {
+                e.preventDefault();
+                this.classList.add('active');
+                $(this).tab('show');
+            });
+        });
+    
+</script>
+
+<style>
+
+.hidden {
+            display: none;
+        }
+
+        .gallery img {
+            max-width: 150px;
+            margin-right: 10px;
+            cursor: pointer; /* Pointer cursor for images */
+        }
+
+        .carousel-item img {
+            max-width: 100%;
+        }
+    
+</style>
