@@ -1,527 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hotel Booking with Popular Destinations</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .search-container {
-            background-color: #333;
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px auto;
-            max-width: 800px;
-        }
-        .search-container input, .search-container select, .search-container button {
-            margin: 10px 0;
-        }
-        .popular-destinations {
-            display: none;
-            background-color: white;
-            color: black;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            padding: 15px;
-            position: absolute;
-            width: 100%;
-            z-index: 1000;
-        }
-        .popular-destinations .section {
-            margin-bottom: 15px;
-        }
-        .popular-destinations .section h6 {
-            font-weight: bold;
-        }
-        .popular-destinations img {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-        .popular-destinations .destination {
-            display: flex;
-            align-items: center;
-            padding: 5px;
-            border-bottom: 1px solid #ddd;
-            cursor: pointer;
-        }
-        .popular-destinations .destination:hover {
-            background-color: #f9f9f9;
-        }
-        .destination-text {
-            margin-left: 10px;
-        }
-        .destination-text small {
-            color: gray;
-        }
-    </style>
-
-<style>
-
-    .dropdown-menu {
-        top: 80% !important;  /* This will push it below the button */
-        left: 0 !important;    /* Align it to the left of the button */
-        margin-top: 5px !important;  /* Add a little space between the button and the dropdown */
-    }
-            /* Dropdown Menu Styling */
-          
-    
-            /* Plus and Minus Button Styling */
-            .dropdown-menu button {
-                border-radius: 50%;
-                width: 28px;
-                height: 28px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                padding: 0;
-                background-color: #f8f9fa;
-                border: 1px solid #ced4da;
-                font-size: 14px;
-            }
-    
-            /* Align Items Horizontally */
-            .dropdown-row {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 10px;
-            }
-    
-            /* Input Styling for Counts */
-            .dropdown-menu input {
-                width: 40px;
-                text-align: center;
-                padding: 2px;
-                border-radius: 4px;
-            }
-        </style>
-</head>
-<body>
-
 <div class="container">
-    <div class="search-container">
-        <!-- Destination Search Box -->
-        <div class="form-group search-box position-relative">
-            <input type="text" class="form-control" id="search-box" placeholder="Enter a destination or property">
-            <!-- Popular Destinations Dropdown -->
-            <div class="popular-destinations" id="popular-destinations">
-                <!-- Recent Searches -->
-                <div class="section">
-                    <h6>Recent search</h6>
-                    <div class="destination">
-                        <img src="https://via.placeholder.com/50" alt="Westin Mumbai">
-                        <div class="destination-text">
-                            <strong>The Westin Mumbai Garden City</strong><br>
-                            <small>25 Oct 2024 - 26 Oct 2024</small>
-                        </div>
-                    </div>
-                </div>
-                <!-- Popular Destinations in India -->
-                <div class="section">
-                    <h6>Destinations in India</h6>
-                    <div class="destination">
-                        <img src="https://via.placeholder.com/50" alt="Hyderabad">
-                        <div class="destination-text">
-                            <strong>Hyderabad</strong><br>
-                            <small>Sightseeing, Restaurants</small>
-                        </div>
-                    </div>
-                    <div class="destination">
-                        <img src="https://via.placeholder.com/50" alt="Mumbai">
-                        <div class="destination-text">
-                            <strong>Mumbai</strong><br>
-                            <small>Shopping, Restaurants</small>
-                        </div>
-                    </div>
-                    <div class="destination">
-                        <img src="https://via.placeholder.com/50" alt="Chennai">
-                        <div class="destination-text">
-                            <strong>Chennai</strong><br>
-                            <small>Shopping, Beaches</small>
-                        </div>
-                    </div>
-                </div>
-                <!-- International Destinations -->
-                <div class="section">
-                    <h6>International Destinations</h6>
-                    <div class="destination">
-                        <img src="https://via.placeholder.com/50" alt="Dubai">
-                        <div class="destination-text">
-                            <strong>Dubai</strong><br>
-                            <small>Shopping, Beaches</small>
-                        </div>
-                    </div>
-                    <div class="destination">
-                        <img src="https://via.placeholder.com/50" alt="Bangkok">
-                        <div class="destination-text">
-                            <strong>Bangkok</strong><br>
-                            <small>Shopping, Restaurants</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Date Pickers -->
-        <div class="form-row">
-            <div class="form-group col">
-                <input type="text" class="form-control" id="from-date" placeholder="From Date">
-            </div>
-            <div class="form-group col">
-                <input type="text" class="form-control" id="to-date" placeholder="To Date">
-            </div>
-        </div>
-        <div class="form-row">
-        <div class="mt-4">
-            <div class="dropdown">
-                <input class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" value="2 adults, 2 children">
-                
-                <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton">
-                    <!-- Room Count -->
-                    <div class="dropdown-row">
-                        <span>Room</span>
-                        <div>
-                            <button id="room-minus">−</button>
-                            <input type="text" id="room-count" value="1" readonly>
-                            <button id="room-plus">+</button>
-                        </div>
-                    </div>
-
-                    <!-- Adult Count -->
-                    <div class="dropdown-row">
-                        <span>Adults</span>
-                        <div>
-                            <button id="adult-minus">−</button>
-                            <input type="text" id="adult-count" value="2" readonly>
-                            <button id="adult-plus">+</button>
-                        </div>
-                    </div>
-
-                    <!-- Children Count -->
-                    <div class="dropdown-row">
-                        <span>Children</span>
-                        <div>
-                            <button id="child-minus">−</button>
-                            <input type="text" id="child-count" value="2" readonly>
-                            <button id="child-plus">+</button>
-                        </div>
-                    </div>
-
-                    <!-- Children Ages -->
-                    <div id="children-ages">
-                        <div class="form-group">
-                            <label for="child-age-1">Age of Child 1</label>
-                            <select class="form-control" id="child-age-1">
-                                <option value="15" selected>15 years old</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="child-age-2">Age of Child 2</label>
-                            <select class="form-control" id="child-age-2">
-                                <option value="14" selected>14 years old</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <h1 class="mb-4">Hotel Room Gallery</h1>
+    <div class="gallery">
+      <div class="main-image">
+        <img src="https://picsum.photos/seed/sqwLlsI95qMCS4sc0zKOx/512" alt="Main Room View" class="img-fluid">
+      </div>
+      <div class="side-images">
+        <img src="https://picsum.photos/seed/GG6J9qGKen7GEfv0cwYLU/512" alt="Image 1" class="img-fluid">
+        <img src="https://picsum.photos/seed/kP94Wd6wYNsQ24xgvCMJc/512" alt="Image 2" class="img-fluid">
+        <img src="https://picsum.photos/seed/1JBFVwrZliPBd1sVMddOk/512" alt="Image 3" class="img-fluid">
+        <img src="https://picsum.photos/seed/PsXpzJwIxiiB-yP5Xeq5M/512" alt="Image 4" class="img-fluid">
+        <img src="https://picsum.photos/seed/7N0fh-2FAPvZJecqpa34N/512" alt="Image 5" class="img-fluid">
+        <img src="https://picsum.photos/seed/1FX6Pp53jTSiWfPV0AKfB/512" alt="Image 6" class="img-fluid">
+      </div>
     </div>
-
-        <!-- Guest Selection Dropdown (for simplicity, omitted here) -->
-        <button type="submit" class="btn btn-primary btn-block">SEARCH</button>
-    </div>
-</div>
-<script>
-
-document.addEventListener('DOMContentLoaded', function () {
-    const dropdownButton = document.getElementById('dropdownMenuButton');
-    const dropdownMenu = document.querySelector('.dropdown-menu');
-
-    // Adjust dropdown position based on available space
-    dropdownButton.addEventListener('click', function () {
-        const dropdownRect = dropdownButton.getBoundingClientRect();
-        const spaceBelow = window.innerHeight - dropdownRect.bottom;
-        const dropdownHeight = dropdownMenu.offsetHeight;
-
-        if (spaceBelow < dropdownHeight) {
-            // Not enough space below, open upwards
-            dropdownMenu.style.top = 'auto';
-            dropdownMenu.style.bottom = '100%';
-            dropdownMenu.style.marginTop = '0';
-            dropdownMenu.style.marginBottom = '5px';  // Add spacing
-        } else {
-            // Enough space below, open downwards
-            dropdownMenu.style.top = '100%';
-            dropdownMenu.style.bottom = 'auto';
-            dropdownMenu.style.marginTop = '5px';
-            dropdownMenu.style.marginBottom = '0';
-        }
+  </div>
+  
+    <script>
+          // Example vanilla JavaScript to add some interactivity
+  document.addEventListener("DOMContentLoaded", function() {
+    const images = document.querySelectorAll('.gallery img');
+    images.forEach(image => {
+      image.addEventListener('click', function() {
+        alert('Image clicked: ' + this.alt);
+      });
     });
-});
+  });
+    </script>
 
+    <style>
 
-
-    document.addEventListener('DOMContentLoaded', function () {
-        let adultCount = 2; // initial adult count
-        let childCount = 2; // initial child count
-        let roomCount = 1; // initial room count
-        let maxAdults = 10;
-        let maxChildren = 6;
-
-        // Room Increment/Decrement Logic
-        document.getElementById('room-plus').addEventListener('click', function(e) {
-            e.stopPropagation(); // Prevent closing dropdown
-            roomCount++;
-            document.getElementById('room-count').value = roomCount;
-        });
-
-        document.getElementById('room-minus').addEventListener('click', function(e) {
-            e.stopPropagation(); // Prevent closing dropdown
-            if (roomCount > 1) {
-                roomCount--;
-                document.getElementById('room-count').value = roomCount;
-            }
-        });
-
-        // Adult Increment/Decrement Logic
-        document.getElementById('adult-plus').addEventListener('click', function(e) {
-            e.stopPropagation(); // Prevent closing dropdown
-            if (adultCount < maxAdults) {
-                adultCount++;
-                document.getElementById('adult-count').value = adultCount;
-            }
-        });
-
-        document.getElementById('adult-minus').addEventListener('click', function(e) {
-            e.stopPropagation(); // Prevent closing dropdown
-            if (adultCount > 1) {
-                adultCount--;
-                document.getElementById('adult-count').value = adultCount;
-            }
-        });
-
-        // Children Increment/Decrement Logic
-        document.getElementById('child-plus').addEventListener('click', function(e) {
-            e.stopPropagation(); // Prevent closing dropdown
-            if (childCount < maxChildren) {
-                childCount++;
-                document.getElementById('child-count').value = childCount;
-                addChildAgeField(childCount);
-            }
-        });
-
-        document.getElementById('child-minus').addEventListener('click', function(e) {
-            e.stopPropagation(); // Prevent closing dropdown
-            if (childCount > 0) {
-                removeChildAgeField(childCount);
-                childCount--;
-                document.getElementById('child-count').value = childCount;
-            }
-        });
-
-        // Function to add a child age dropdown when children count is increased
-        function addChildAgeField(count) {
-            const childrenAgesDiv = document.getElementById('children-ages');
-            const formGroup = document.createElement('div');
-            formGroup.classList.add('form-group');
-
-            const label = document.createElement('label');
-            label.textContent = `Age of Child ${count}`;
-            label.setAttribute('for', `child-age-${count}`);
-            
-            const select = document.createElement('select');
-            select.classList.add('form-control');
-            select.id = `child-age-${count}`;
-            
-            // Add age options
-            for (let i = 0; i <= 17; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = `${i} years old`;
-                select.appendChild(option);
-            }
-
-            formGroup.appendChild(label);
-            formGroup.appendChild(select);
-            childrenAgesDiv.appendChild(formGroup);
-
-            // Stop event propagation for child age dropdown
-            select.addEventListener('click', function (e) {
-                e.stopPropagation();
-            });
-        }
-
-        // Function to remove a child age dropdown when children count is decreased
-        function removeChildAgeField(count) {
-            const childAgeSelect = document.getElementById(`child-age-${count}`);
-            if (childAgeSelect) {
-                childAgeSelect.parentElement.remove();
-            }
-        }
-
-    });
-</script>
-<!-- jQuery, Bootstrap JS -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-<script>
-    $(document).ready(function() {
-        // Show popular destinations when the search box is clicked
-        $('#search-box').focus(function() {
-            $('#popular-destinations').slideDown();
-        });
-
-        // Hide popular destinations when clicked outside
-        $(document).click(function(e) {
-            if (!$(e.target).closest('#search-box, #popular-destinations').length) {
-                $('#popular-destinations').slideUp();
-            }
-        });
-
-        // Hide popular destinations when a destination is clicked
-        $('.destination').click(function() {
-            const destinationName = $(this).find('strong').text();
-            $('#search-box').val(destinationName);
-            $('#popular-destinations').slideUp();
-        });
-    });
-</script>
-
-</body>
-</html>
-
-
-    
+    /* Custom styles for the gallery */
+    .container {
+      max-width: 1099px; /* Reduced container width */
+      padding: 30px;
+    }
+    .gallery {
+      display: flex;
+      gap: 1px;
+      align-items: stretch; /* Ensures that all items stretch to the same height */
+      height: 350px; /* Adjusted height */
+    }
+    .main-image {
+      flex: 0 0 40%; /* Takes up 40% width */
+      height: 100%;
+    }
+    .main-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .side-images {
+      flex: 0 0 60%; /* Takes up 60% width */
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* 3 columns */
+      grid-template-rows: 1fr 0.7fr; /* Adjusted height of rows, smaller row below */
+      gap: 1px;
+      height: 100%;
+      align-items: stretch; /* Ensure that all images stretch to fill their space */
+    }
+    .side-images img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+  
+    </style>
     <!-- Font Awesome for icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-    <style>
-        .my-show{
-
-     
-        .split-table {
-            display: table;
-            width: 100%;
-        }
-        .table-col1, .table-col2 {
-            display: table-cell;
-            vertical-align: top;
-        }
-        .table-col1 {
-            width: 16%;
-            padding-right: 20px;
-        }
-        .table-col2 {
-            width: 70%;
-        }
-        .benefit-header {
-            font-weight: bold;
-            background-color: #f8f9fa;
-        }
-        .most-booked {
-            color: green;
-        }
-        .price {
-            color: red;
-            font-weight: bold;
-        }
-        .room-details img {
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-        .room-details {
-            margin-bottom: 15px;
-        }
-        .facility {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .facility i {
-            font-size: 20px;
-            margin-right: 10px;
-            color: #007bff;
-        }
-    }
-    </style>
-    <style>
-         .my-show{
-        .split-table {
-            display: table;
-            width: 100%;
-        }
-        .table-col1, .table-col2 {
-            display: table-cell;
-            vertical-align: top;
-        }
-        .table-col1 {
-            width: 16%;
-            padding-right: 20px;
-        }
-        .table-col2 {
-            width: 70%;
-        }
-        .benefit-header {
-            font-weight: bold;
-            background-color: #f8f9fa;
-            padding: 10px;
-        }
-        .price {
-            color: red;
-            font-weight: bold;
-        }
-        .room-details img {
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-        .room-details {
-            margin-bottom: 15px;
-        }
-        .facility {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-        .facility i {
-            font-size: 20px;
-            margin-right: 5px;
-            color: #007bff;
-        }
-        ul {
-            list-style: none;
-            padding-left: 0;
-        }
-        ul li:before {
-            content: '✔';
-            color: green;
-            margin-right: 5px;
-        }
-        .table-border {
-
-            border-right: 1px solid #dee2e6 !important;
-}
-    }
-    </style>
-      <style>
-         .my-show{
-        /* Custom styles for additional spacing */
-        .custom-alert {
-          background-color: #f8fdf8; /* light green background */
-          border: none;
-        }
-        .limited-text {
-          color: #008000; /* green color */
-        }
-    }
-      </style>
-
+   
 <style>
      .my-show{
     /* Additional styling for popover content */
@@ -595,55 +143,56 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   </script>
+
+
+
 <div class="container my-show mt-5">
+    <h2 class="text-center mb-4">Room Details</h2>
     <div class="split-table">
-        <!-- Column 1 (Room Photos and Facilities) -->
+        
         <div class="table-col1">
-            <!-- Room photos -->
-            <div class="room-details">
-                <img src="https://via.placeholder.com/300x200" alt="Room photo 1">
+            
+            <div class="room-details mb-4">
+                <img src="https://picsum.photos/seed/lEpr4-mARq_WKnSOdd4Uq/512" alt="Room photo 1" class="img-fluid main-image">
+                <img src="https://picsum.photos/seed/7XTRv2IqnVtgkZnJSrm3O/512" alt="Room photo 1 zoomed" class="img-fluid zoom-image">
                 <div class="row mt-2">
                     <div class="col-6">
-                        <img src="https://via.placeholder.com/140x100" alt="Room photo 2">
+                        <img src="https://picsum.photos/seed/w6w3JezSnLIIfJWWjgx44/512" alt="Room photo 2" class="img-fluid" onmouseover="showZoomImage(this.src)">
                     </div>
                     <div class="col-6">
-                        <img src="https://via.placeholder.com/140x100" alt="Room photo 3">
+                        <img src="https://picsum.photos/seed/vPQgK1tuziN15M6sXQVr-/512" alt="Room photo 3" class="img-fluid" onmouseover="showZoomImage(this.src)">
                     </div>
                 </div>
             </div>
 
-            <!-- Room facilities -->
+            
             <div class="facility">
-                <i class="fas fa-bed"></i>
+                <i class="fas fa-bed me-2"></i>
                 <span>2 single beds</span>
             </div>
             <div class="facility">
-                <i class="fas fa-ruler-combined"></i>
+                <i class="fas fa-ruler-combined me-2"></i>
                 <span>Room size: 41 m² / 441 ft²</span>
             </div>
             <div class="facility">
-                <i class="fas fa-city"></i>
+                <i class="fas fa-city me-2"></i>
                 <span>City view</span>
             </div>
             <div class="facility">
-                <i class="fas fa-smoking-ban"></i>
+                <i class="fas fa-smoking-ban me-2"></i>
                 <span>Non-smoking</span>
             </div>
             <div class="facility">
-                <i class="fas fa-shower"></i>
+                <i class="fas fa-shower me-2"></i>
                 <span>Separate shower/bathtub</span>
             </div>
             <div>
-               
                 <a href="#" id="facilitiesPopover" class="text-primary">See all room facilities</a>
-
             </div>
-            
         </div>
 
-        <!-- Column 2 (Repeated headers for multiple rows) -->
+        
         <div class="table-col2">
-            <!-- Row 1 -->
             <div class="benefit-header row p-2">
                 <div class="col-md-4">Benefits</div>
                 <div class="col-md-1">Sleeps</div>
@@ -651,7 +200,46 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="col-md-1">Quantity</div>
                 <div class="col-md-4">Most Booked</div>
             </div>
+            <div class="row p-2 border-bottom">
+                <div class="col-md-4 table-border">
+                  
+                    <div class="col-md-12">
+                        <p><strong>Your price includes:</strong></p>
+                        <ul>
+                            <li>Free cancellation before October 23, 2024</li>
+                            <li>Free WiFi</li>
+                        </ul>
+                        <p><strong>Optional benefit:</strong></p>
+                        <ul>
+                            <li>Breakfast at Rs. 3,500</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-1 table-border">2 Adults</div>
+                <div class="col-md-2 price table-border">Rs. 14,000</div>
+                <div class="col-md-1 table-border">
+                    <input type="number" class="form-control" value="1">
+                </div>
+                <div class="col-md-4 most-booked">
+                    <div class="container mt-3">
+                        <div class="text-center mb-3">
+                            <button class="btn btn-primary btn-block">Book now</button>
+                        </div>
+                        <div class="text-center mb-3">
+                            <button class="btn btn-outline-primary btn-block">Add to cart</button>
+                        </div>
+                        <div class="alert custom-alert text-center font-weight-bold mb-3">
+                            <span class="text-success">NO RISK!</span> <br>
+                            <small class="text-muted">No cancellation fee</small>
+                        </div>
+                        <div class="text-center limited-text font-weight-bold">
+                            Limited availability
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            
             <div class="row p-2 border-bottom">
                 <div class="col-md-4 table-border">
                     <div class="col-md-12">
@@ -673,232 +261,125 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>
                 <div class="col-md-4 most-booked">
                     <div class="container mt-3">
-                        <!-- "Book now" button -->
                         <div class="text-center mb-3">
-                          <button class="btn btn-primary btn-block">Book now</button>
+                            <button class="btn btn-primary btn-block">Book now</button>
                         </div>
-                      
-                        <!-- "Add to cart" button -->
                         <div class="text-center mb-3">
-                          <button class="btn btn-outline-primary btn-block">Add to cart</button>
+                            <button class="btn btn-outline-primary btn-block">Add to cart</button>
                         </div>
-                      
-                        <!-- "No Risk!" section -->
                         <div class="alert custom-alert text-center font-weight-bold mb-3">
-                          <span class="text-success">NO RISK!</span> <br>
-                          <small class="text-muted">No cancellation fee</small>
+                            <span class="text-success">NO RISK!</span> <br>
+                            <small class="text-muted">No cancellation fee</small>
                         </div>
-                      
-                        <!-- "Limited availability" text -->
                         <div class="text-center limited-text font-weight-bold">
-                          Limited availability
+                            Limited availability
                         </div>
-                      </div>
-                </div>
-            </div>
-
-            <!-- Row 2 -->
-           
-
-            <div class="row p-2 border-bottom">
-                <div class="col-md-4 table-border">
-                    <div class="col-md-12">
-                        <p><strong>Your price includes:</strong></p>
-                        <ul>
-                            <li>Free cancellation before October 23, 2024</li>
-                            <li>Free WiFi</li>
-                        </ul>
-                        <p><strong>Optional benefit:</strong></p>
-                        <ul>
-                            <li>Breakfast at Rs. 3,500</li>
-                        </ul>
                     </div>
                 </div>
-                <div class="col-md-1 table-border">2 Adults</div>
-                <div class="col-md-2 price table-border">Rs. 14,000</div>
-                <div class="col-md-1 table-border">
-                    <input type="number" class="form-control" value="1">
-                </div>
-                <div class="col-md-4 most-booked">
-                    <div class="container mt-3">
-                        <!-- "Book now" button -->
-                        <div class="text-center mb-3">
-                          <button class="btn btn-primary btn-block">Book now</button>
-                        </div>
-                      
-                        <!-- "Add to cart" button -->
-                        <div class="text-center mb-3">
-                          <button class="btn btn-outline-primary btn-block">Add to cart</button>
-                        </div>
-                      
-                        <!-- "No Risk!" section -->
-                        <div class="alert custom-alert text-center font-weight-bold mb-3">
-                          <span class="text-success">NO RISK!</span> <br>
-                          <small class="text-muted">No cancellation fee</small>
-                        </div>
-                      
-                        <!-- "Limited availability" text -->
-                        <div class="text-center limited-text font-weight-bold">
-                          Limited availability
-                        </div>
-                      </div>
-                </div>
             </div>
 
-        
-            <!-- Add more rows as needed -->
+            
         </div>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+
+
+function showZoomImage(imageSrc) {
+        const zoomImage = document.querySelector('.zoom-image');
+        zoomImage.src = imageSrc; // Set the source of the zoom image
+    }
+
+  // Example vanilla JavaScript to add some interactivity
+  document.addEventListener("DOMContentLoaded", function() {
+    const images = document.querySelectorAll('.gallery img');
+    images.forEach(image => {
+      image.addEventListener('click', function() {
+        alert('Image clicked: ' + this.alt);
+      });
+    });
+  });
+
+</script>
+<style>
+
+.my-show {
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            overflow: hidden;
+            position: relative; /* Establish a containing block for absolutely positioned elements */
+        }
+        .split-table {
+            display: flex;
+            margin: 0;
+        }
+        .table-col1,
+        .table-col2 {
+            padding: 15px;
+        }
+        .facility {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .table-border {
+            border: 1px solid #dee2e6;
+            padding: 10px;
+        }
+        .most-booked {
+            padding: 0;
+        }
+        .custom-alert {
+            background-color: #e7f3fe;
+            border-left: 6px solid #007bff;
+        }
+
+        /* Styles for room photos with zoom effect */
+        .room-details {
+            position: relative; /* Position relative for absolute positioning of the zoomed image */
+        }
+        .room-details img {
+            transition: transform 0.3s ease; /* Transition for smooth zoom */
+            cursor: pointer; /* Cursor pointer on hover */
+        }
+
+        .zoom-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            z-index: 1; /* Behind the main image */
+            display: none; /* Hide initially */
+            border-radius: 10px; /* Round corners */
+        }
+
+        .room-details:hover .zoom-image {
+            display: block; /* Show on hover */
+        }
+
+        .room-details:hover .main-image {
+            z-index: 2; /* Bring the main image to the front */
+        }
+
+        .benefit-image {
+            max-width: 100%; /* Ensure the image fits */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 10px; /* Round corners */
+        }
+    
+</style>
 
 <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> -->
 
     
     <!-- Font Awesome for icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
-    <style>
-        .my-show{
-
-     
-        .split-table {
-            display: table;
-            width: 100%;
-        }
-        .table-col1, .table-col2 {
-            display: table-cell;
-            vertical-align: top;
-        }
-        .table-col1 {
-            width: 16%;
-            padding-right: 20px;
-        }
-        .table-col2 {
-            width: 70%;
-        }
-        .benefit-header {
-            font-weight: bold;
-            background-color: #f8f9fa;
-        }
-        .most-booked {
-            color: green;
-        }
-        .price {
-            color: red;
-            font-weight: bold;
-        }
-        .room-details img {
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-        .room-details {
-            margin-bottom: 15px;
-        }
-        .facility {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-        .facility i {
-            font-size: 20px;
-            margin-right: 10px;
-            color: #007bff;
-        }
-    }
-    </style>
-    <style>
-         .my-show{
-        .split-table {
-            display: table;
-            width: 100%;
-        }
-        .table-col1, .table-col2 {
-            display: table-cell;
-            vertical-align: top;
-        }
-        .table-col1 {
-            width: 16%;
-            padding-right: 20px;
-        }
-        .table-col2 {
-            width: 70%;
-        }
-        .benefit-header {
-            font-weight: bold;
-            background-color: #f8f9fa;
-            padding: 10px;
-        }
-        .price {
-            color: red;
-            font-weight: bold;
-        }
-        .room-details img {
-            width: 100%;
-            height: auto;
-            border-radius: 5px;
-        }
-        .room-details {
-            margin-bottom: 15px;
-        }
-        .facility {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-        .facility i {
-            font-size: 20px;
-            margin-right: 5px;
-            color: #007bff;
-        }
-        ul {
-            list-style: none;
-            padding-left: 0;
-        }
-        ul li:before {
-            content: '✔';
-            color: green;
-            margin-right: 5px;
-        }
-        .table-border {
-
-            border-right: 1px solid #dee2e6 !important;
-}
-    }
-    </style>
-      <style>
-         .my-show{
-        /* Custom styles for additional spacing */
-        .custom-alert {
-          background-color: #f8fdf8; /* light green background */
-          border: none;
-        }
-        .limited-text {
-          color: #008000; /* green color */
-        }
-    }
-      </style>
-
-<style>
-     .my-show{
-    /* Additional styling for popover content */
-    .popover {
-      max-width: 1000px; /* Adjust the width of the popover */
-    }
-    .popover-header {
-      font-weight: bold;
-      background-color: #f8f9fa;
-    }
-}
-  </style>
-
+ 
     <!-- Bootstrap 4 JS and dependencies -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-  
+
   <script>
     // Wait for the DOM content to load
     document.addEventListener('DOMContentLoaded', function() {
@@ -1109,15 +590,12 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> -->
 
     
     <!-- Font Awesome for icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+  
     <style>
         .my-show{
 
@@ -1254,8 +732,7 @@ document.addEventListener('DOMContentLoaded', function () {
   </style>
 
     <!-- Bootstrap 4 JS and dependencies -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
   
   <script>
     // Wait for the DOM content to load
@@ -1466,9 +943,3 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
     </div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
