@@ -70,13 +70,13 @@ end
 
 gem "dotenv", groups: [ :development, :test ]
 
-gem 'deface', '~> 1.6'
-gem 'spree_frontend', '~> 4.7'
-gem 'jsbundling-rails'
-gem 'turbo-rails'
-gem 'browser'
-gem 'webpacker'
-gem 'minitest', '~> 5.5.1'
-
-
+gem "deface", "~> 1.6"
+gem "spree_frontend", "~> 4.7"
+gem "jsbundling-rails"
+gem "turbo-rails"
+gem "browser"
+gem "webpacker"
+gem "minitest", "~> 5.5.1"
+gem "city-state"
+gem "geocoder"
 # gem "spree_admin_roles_and_access", github: "vinsol-spree-contrib/spree_admin_roles_and_access"

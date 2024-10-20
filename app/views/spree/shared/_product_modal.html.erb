@@ -1,0 +1,134 @@
+<% img_option_types =  Spree::OptionType.where(id: product.images.map { |a| a.option_type_id }.uniq).order(position: :asc).pluck(:id, :name) %>
+<!-- Modal -->
+<div class="modal fade" id="imageModal<%= product.id %>" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel<%= product.id %>" aria-hidden="true">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalLabel<%= product.id %>"><%= t('product_modal.property_images') %></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="<%= t('product_modal.close') %>">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Left Side: Images -->
+        <div class="flex-grow-1">
+          <!-- Tabs -->
+          <ul class="nav nav-tabs" id="imageTabs<%= product.id %>" role="tablist">
+            <li class="nav-item">
+              <button class="btn btn-secondary toggle-button" id="toggleButton<%= product.id %>"><%= t('product_modal.switch_to_slideshow') %></button>
+            </li>
+            <% img_option_types.each_with_index do |each_tab, index| %>
+              <li class="nav-item">
+                <a class="nav-link <%= index == 0 ? 'active' : '' %>" id="tab<%= product.id %>-<%= index %>-tab" data-bs-toggle="tab" href="#tab<%= product.id %>-<%= index %>" role="tab"
+                   aria-controls="tab<%= product.id %>-<%= index %>" aria-selected="true">
+                   <%= each_tab[1] == "default" ? t('product_modal.all') : each_tab[1] %>
+                </a>
+              </li>
+            <% end %>
+          </ul>
+
+          <!-- Carousel (Initially Hidden) -->
+          <div id="carousel<%= product.id %>" class="carousel slide hidden" data-bs-ride="carousel">
+            <div class="carousel-inner" id="carouselImages<%= product.id %>"></div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carousel<%= product.id %>" data-bs-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="visually-hidden"><%= t('product_modal.previous') %></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carousel<%= product.id %>" data-bs-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+              <span class="visually-hidden"><%= t('product_modal.next') %></span>
+            </button>
+          </div>
+
+          <!-- Tab Content -->
+          <div class="tab-content" id="myTabContent<%= product.id %>">
+            <% img_option_types.each_with_index do |each_tab, index| %>
+              <div class="tab-pane fade show <%= index == 0 ? 'active' : '' %>" id="tab<%= product.id %>-<%= index %>" role="tabpanel">
+                <!-- Grid layout for the gallery -->
+                <div class="gallery-grid">
+                  <% product.images.where(option_type_id: each_tab[0]).each do |img| %>
+                    <%= image_tag(main_app.cdn_image_url(img.url(:large)), class: 'gallery-image', alt: t('product_modal.gallery_image')) %>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Right Side: Property Overview -->
+        <div class="property-overview">
+          <h5><%= t('product_modal.property_overview') %></h5>
+          <p><strong><%= t('product_modal.nearby_attractions') %>:</strong></p>
+          <ul>
+            <li>Shilparamam Cultural Society (1.42 km)</li>
+            <li>Golconda Fort (7.2 km)</li>
+          </ul>
+          <p><strong><%= t('product_modal.dining_facilities') %>:</strong></p>
+          <ul>
+            <li><%= t('product_modal.free_wifi') %></li>
+            <li><%= t('product_modal.coffee_tea_maker') %></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap and jQuery -->
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+
+
+<script>
+  function populateCarousel(galleryId, carouselImagesId, clickedImage) {
+      const activeTab = document.querySelector(`#${galleryId}.tab-pane.active`);
+      const images = activeTab.querySelectorAll('.gallery-grid img');
+      const carouselImagesContainer = document.getElementById(carouselImagesId);
+      carouselImagesContainer.innerHTML = '';
+      images.forEach((img, index) => {
+          const carouselItem = document.createElement('div');
+          carouselItem.className = 'carousel-item' + (img.src === clickedImage.src ? ' active' : '');
+          carouselItem.innerHTML = `<img src="${img.src}" class="d-block w-100" alt="Image ${index + 1}">`;
+          carouselImagesContainer.appendChild(carouselItem);
+      });
+
+      if ($(carouselImagesContainer).data('bs.carousel')) {
+          $(carouselImagesContainer).carousel('dispose');
+      }
+      $(carouselImagesContainer).carousel();
+  }
+
+  function toggleView(galleryId, carouselId, buttonId, clickedImage) {
+      const gallery = document.querySelector(`#${galleryId} .gallery-grid`);
+      const carousel = document.getElementById(carouselId);
+      const isGalleryVisible = !gallery.classList.contains('hidden');
+
+      if (isGalleryVisible) {
+          populateCarousel(galleryId, carouselId.replace('carousel', 'carouselImages'), clickedImage);
+          gallery.classList.add('hidden');
+          carousel.classList.remove('hidden');
+          document.getElementById(buttonId).textContent = '<%= t('product_modal.switch_to_gallery') %>';
+      } else {
+          gallery.classList.remove('hidden');
+          carousel.classList.add('hidden');
+          document.getElementById(buttonId).textContent = '<%= t('product_modal.switch_to_slideshow') %>';
+      }
+  }
+
+  document.getElementById('toggleButton<%= product.id %>').addEventListener('click', function () {
+      const activeTabId = document.querySelector('#imageTabs<%= product.id %> .nav-link.active').getAttribute('href').substring(1);
+      const galleryId = activeTabId;
+      const carouselId = `carousel<%= product.id %>`;
+      const clickedImage = document.querySelector(`#${galleryId} .gallery-grid img`);
+      toggleView(galleryId, carouselId, this.id, clickedImage);
+  });
+
+  document.querySelectorAll('.gallery-grid img').forEach((image) => {
+      image.addEventListener('click', function () {
+          const activeTabId = this.closest('.tab-pane').id;
+          const galleryId = activeTabId;
+          const carouselId = `carousel<%= product.id %>`;
+          toggleView(galleryId, carouselId, 'toggleButton<%= product.id %>', this);
+      });
+  });
+</script>

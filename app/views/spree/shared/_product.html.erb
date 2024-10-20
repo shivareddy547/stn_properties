@@ -1,40 +1,4 @@
 
-<style>
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px;
-    padding: 20px;
-  }
-
-  .gallery-grid img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    cursor: pointer;
-    border-radius: 5px;
-  }
-
-  .carousel-item img {
-    width: 100%;
-    height: 500px;
-    object-fit: cover;
-  }
-
-  .property-overview {
-    border-left: 1px solid #ddd;
-    padding: 20px;
-    max-width: 300px;
-  }
-
-  .modal-body {
-    display: flex;
-  }
-
-  .hidden {
-    display: none;
-  }
-</style>
 <div class="row mb-3" style="border: 1px solid #ccc; border-radius: 10px; padding: 0px;">
   
   <!-- Row Header with Notification Text -->
@@ -45,14 +9,6 @@
   </div>
 
   <!-- Part 1: Image Gallery (Main Image and Thumbnail Row) -->
-  <style>
-    .main-img-thumbnail{
-      max-height: 400px; object-fit: cover; width: 100%;
-    }
-    .img-fluid-thumb{
-      height: 100px; object-fit: cover; width: 100px;
-    }
-  </style>
 
 <div class="col-4 product">
   <% if product.images.size > 1 %>
@@ -67,232 +23,193 @@
     </div>
   <% end %>
 </div>
-
-<% @product= product %>
-<% @variants = product.variants  %>
-  <% url = spree.product_path(product, taxon_id: @taxon.try(:id)) %>
-
-  <% is_product_available_in_currency = product_available_in_currency? %>
+<% @product = product %>
+<% @variants = product.variants %>
+<% url = spree.product_path(product, taxon_id: @taxon.try(:id)) %>
+<% is_product_available_in_currency = product_available_in_currency? %>
 <% default_variant = default_variant(@variants, @product) %>
+
+<!-- Part 2: Product Details -->
+<div class="col-5 product-card">
   
-  <!-- Part 2: Product Details -->
-  <div class="col-5">
+  <%= link_to url, style: "text-decoration: none; color: inherit;" do %>
+    <!-- Hotel Name -->
+    <div class="product-component-name" title="<%= product.name %>">
+      <span class="product-name">
+        <%= truncate(product.name, length: 50) %>
+      </span>
+    </div>
     
-      <%= link_to url,style:"text-decoration: none; color: inherit;" do %>
-      <div class="product-component-name" title="The LaLiT Mumbai">
-        <%= content_tag(:span, truncate(product.name, length: 50), class: 'info mt-3 d-block', title: product.name) %>
+    <!-- Hotel Rating (Stars) -->
+    <div class="product-rating-location">
+      <span class="rating">
+        <%= display_stars(product.rating) %>
+      </span>
 
-      </div>
-      <div class="product-rating-location" style="font-size: 14px; color: #666;">
-        <span class="rating">★★★★☆</span> <!-- Example rating -->
-        <span class="location">Location: Mumbai, India</span>
-      </div>
+      <!-- Location with Map Icon -->
+      <% if product.address.present? %>
+      <span class="location">
+        <i class="fas fa-location-dot fa-lg" style="margin-right: 5px; color: rgb(32, 103, 218);"></i>
+        <%= product.address %>
+      </span>
+      <% end %>
+    </div>
 
-      <!-- Property Offers Section -->
-      <div class="offers-section" style="margin-top: 10px;">
-        <strong>This property offers:</strong>
-        <div class="offers" style="margin-top: 5px; position: relative;">
-          <span class="offer-box" style="display: inline-block; background-color: #f8f8f8; border: 1px solid #ccc; border-radius: 5px; padding: 5px 10px; margin: 2px;">Breakfast Included</span>
-          <span class="offer-box" style="display: inline-block; background-color: #f8f8f8; border: 1px solid #ccc; border-radius: 5px; padding: 5px 10px; margin: 2px;">Free Wifi</span>
-          <span class="offer-box more" style="display: inline-block; background-color: #f8f8f8; border: 1px solid #ccc; border-radius: 5px; padding: 5px 10px; margin: 2px;">
-            <span class="more">More</span>
+    <!-- Property Offers Section -->
+    <div class="offers-section">
+      <strong class="offers-header">
+        This property offers:
+      </strong>
+      
+      <div class="offers" style="margin-top: 5px; position: relative;">
+        <% product.all_amenities.each do |amenity| %>
+          <span class="offer-box">
+            <%= amenity.name.humanize %>
           </span>
-        </div>
+        <% end %>
+
+        <% if product.all_amenities.size > 3 %>
+          <span class="offer-box more">
+            More
+          </span>
+        <% end %>
       </div>
-     
-<% end %>
-  </div>
+    </div>
+  <% end %>
+</div>
+
+
+
+
+
 
   <!-- Dotted Line Separator -->
   <div class="col-1" style="border-left: 1px dotted #ccc; height: 100%;"></div>
 
   <!-- Part 3: Price Details -->
   <div class="col-2 text-right">
+    <% @product = product %>
+    <% @variants = product.variants %>
+    <% default_variant = @variants.detect(&:is_master) || @variants.first %> <!-- Use the master variant or fallback to the first variant -->
+  
     <div class="review-section" style="font-size: 16px; color: #2a6ebd;">
       <strong>8.6 Excellent</strong><br>
       <span style="font-size: 12px; color: #666;">584 reviews</span>
     </div>
     
-    <div class="offer-section mt-2" style="color: #d9534f;">
-      <span style="background-color: #ff6666; color: white; padding: 5px; border-radius: 5px;"><%= discount_percentage = ((default_variant.compare_at_price - default_variant.price) / default_variant.compare_at_price) * 100 %>% OFF TODAY</span>
-      <div style="color: #f77f7f;">Price has increased</div>
-    </div>
-
-    <div class="price-section mt-2">
-    
-      <div style="text-decoration: line-through; font-size: 18px; color: #666;"><%= display_price(default_variant) %></div>
-      <% if should_display_compare_at_price?(default_variant) %>
-      <div style="font-size: 24px; color: #d9534f;"><strong><%= display_compare_at_price(default_variant) %></strong></div>
-      <% end %>
-      <div style="font-size: 12px; color: #999;">Per night before taxes and fees</div>
-    </div>
+    <% if default_variant %>
+      <div class="offer-section mt-2" style="color: #d9534f;">
+        <% if default_variant.cost_price.present? && default_variant.compare_at_price.present? %>
+          <span style="background-color: #ff6666; color: white; padding: 5px; border-radius: 5px;">
+            <% discount_percentage = ((default_variant.compare_at_price - default_variant.price) / default_variant.compare_at_price * 100).round %>
+            <%= "#{discount_percentage}% OFF TODAY" %>
+          </span>
+          <div style="color: #f77f7f;">Price has increased</div>
+        <% else %>
+          <span style="color: #d9534f;">
+            No discounts available
+          </span>
+        <% end %>
+      </div>
+  
+      <div class="price-section mt-2">
+        <% if default_variant.compare_at_price.present? && should_display_compare_at_price?(default_variant) %>
+          <div style="text-decoration: line-through; font-size: 18px; color: #666;">
+            <%= display_price(default_variant) %>
+          </div>
+          <div style="font-size: 24px; color: #d9534f;">
+            <strong><%= display_compare_at_price(default_variant) %></strong>
+          </div>
+        <% else %>
+          <div style="font-size: 24px; color: #d9534f;">
+            <strong><%= display_price(default_variant) %></strong>
+          </div>
+        <% end %>
+        
+        <div style="font-size: 12px; color: #999;">Per night before taxes and fees</div>
+      </div>
+    <% else %>
+      <div style="color: #f00;">No variants available for this product.</div>
+    <% end %>
   </div>
+  
 </div>
 
 <!-- <button class="btn btn-primary open-modal" data-modal-target="#productModal<%= product.id %>">View Images</button> -->
 
-<% img_option_types =  Spree::OptionType.where(id: product.images.map{|a| a.option_type_id}.uniq).order(position: :asc).pluck(:id,:name) %>
-<!-- Modal -->
-<div class="modal fade" id="imageModal<%= product.id %>" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel<%= product.id %>" aria-hidden="true">
-  <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="imageModalLabel<%= product.id %>">Property Images</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
+<style>
+  .product-card {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #fff;
+    max-width: 300px;
+}
 
-        <!-- Left Side: Images -->
-        <div class="flex-grow-1">
-          <!-- Tabs -->
-          <ul class="nav nav-tabs" id="imageTabs<%= product.id %>" role="tablist">
-            <li class="nav-item">
-                <button class="btn btn-secondary toggle-button" id="toggleButton<%= product.id %>">Switch to Slideshow</button>
-              </li>
-            <!-- <li class="nav-item">
-              <a class="nav-link active" id="all-tab" data-toggle="tab" href="#all" role="tab" aria-controls="all" aria-selected="true">All (72)</a>
-            </li> -->
-            <% img_option_types.each_with_index do |each_tab, index| %>
-                <li class="nav-item">
-                  <a class="nav-link <%= index == 0 ? 'active' : ''%>" id="tab<%= product.id %>-<%= index %>-tab" data-bs-toggle="tab" href="#tab<%= product.id %>-<%= index %>" role="tab"
-                     aria-controls="tab<%= product.id %>-<%= index %>" aria-selected="true">
-                     <%= each_tab[1] == "default" ? "all" : each_tab[1] %>
-                  </a>
-                </li>
-              <% end %>
-            <!-- Add more tabs as needed -->
-          </ul>
+.product-name {
+    font-weight: bold;
+    font-size: 18px;
+    display: block;
+    color: #333;
+}
 
-          <!-- Grid & Carousel Toggle Button -->
-          <!-- <button class="btn btn-primary my-3" id="toggleViewBtn">Slideshow</button> -->
-          <div id="carousel<%= product.id %>" class="carousel slide hidden" data-bs-ride="carousel">
-            <div class="carousel-inner" id="carouselImages<%= product.id %>"></div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carousel<%= product.id %>" data-bs-slide="prev">
-              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carousel<%= product.id %>" data-bs-slide="next">
-              <span class="carousel-control-next-icon" aria-hidden="true"></span>
-              <span class="visually-hidden">Next</span>
-            </button>
-          </div>
-          <!-- Tab Content -->
-          <div class="tab-content" id="myTabContent<%= product.id %>">
-            <!-- All Images Grid -->
-            <% img_option_types.each_with_index do |each_tab, index| %>
-            <div class="tab-pane fade show <%= index == 0 ? 'active' : ''%>" id="tab<%= product.id %>-<%= index %>" role="tabpanel">
-              <!-- Grid layout for the gallery -->
-              <div class="gallery-grid">
-                <% product.images.where(option_type_id: each_tab[0]).each do |img| %>
-                  
-                    <%= image_tag(main_app.cdn_image_url(img.url(:large)), class: 'gallery-image', alt: 'Gallery Image') %>
-                
-                <% end %>
-              </div>
-            </div>
-          <% end %>
+.product-rating-location {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+}
 
+.rating {
+    color: rgb(181, 76, 1);
+    min-width: 14px;
+    min-height: 14px;
+    max-width: 14px;
+    max-height: 14px;
+}
 
-            
+.location {
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    text-decoration: none;
+    text-underline-offset: 4px;
+    font-weight: 600;
+    color: rgb(32, 103, 218);
+    fill: rgb(32, 103, 218);
+    margin-left: 5px;
+    font-size: 12px;
+}
 
+.map-icon {
+    width: 14px;
+    height: 14px;
+    margin-right: 5px;
+}
 
-          
-          </div>
+.offers-header {
+    font-weight: 400;
+    color: rgb(37, 44, 56);
+    line-height: calc(18.19px);
+    font-size: 14px;
+    margin-top: calc(2.81px);
+    margin-bottom: calc(2.81px);
+}
 
-          <!-- Carousel View (Initially Hidden) -->
-        <!-- Carousel, initially hidden -->
-        
+.offers-section {
+    margin-top: 10px;
+}
 
-          
-        </div>
+.offer-box {
+    font-weight: 400;
+    color: rgb(94, 107, 130);
+    display: inline-block;
+    background-color: #f8f8f8;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin: 2px;
+    line-height: calc(14.98px);
+    font-size: 12px;
+}
 
-        <!-- Right Side: Property Overview -->
-        <div class="property-overview">
-          <h5>Property Overview</h5>
-          <p><strong>Nearby Attractions:</strong></p>
-          <ul>
-            <li>Shilparamam Cultural Society (1.42 km)</li>
-            <li>Golconda Fort (7.2 km)</li>
-            <!-- Add more details -->
-          </ul>
-          <p><strong>Dining & Facilities:</strong></p>
-          <ul>
-            <li>Free Wifi</li>
-            <li>Coffee/Tea Maker</li>
-            <!-- Add more details -->
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Bootstrap and jQuery -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-<script>
-  // Populate carousel with images from the active tab
-  function populateCarousel(galleryId, carouselImagesId, clickedImage) {
-      const activeTab = document.querySelector(`#${galleryId}.tab-pane.active`);
-      const images = activeTab.querySelectorAll('.gallery-grid img');
-      const carouselImagesContainer = document.getElementById(carouselImagesId);
-      carouselImagesContainer.innerHTML = ''; // Clear previous images
-  console.log(33333333)
-  console.log(images)
-      images.forEach((img, index) => {
-          const carouselItem = document.createElement('div');
-          carouselItem.className = 'carousel-item' + (img.src === clickedImage.src ? ' active' : '');
-          carouselItem.innerHTML = `<img src="${img.src}" class="d-block w-100" alt="Image ${index + 1}">`;
-          carouselImagesContainer.appendChild(carouselItem);
-      });
-  
-      // Reinitialize carousel
-      if ($(carouselImagesContainer).data('bs.carousel')) {
-          $(carouselImagesContainer).carousel('dispose'); // Dispose if already initialized
-      }
-      $(carouselImagesContainer).carousel(); // Reinitialize carousel
-  }
-  
-  // Toggle between gallery (grid view) and carousel views
-  function toggleView(galleryId, carouselId, buttonId, clickedImage) {
-    console.log(galleryId)
-      const gallery = document.querySelector(`#${galleryId} .gallery-grid`);
-      const carousel = document.getElementById(carouselId);
-      const isGalleryVisible = !gallery.classList.contains('hidden');
-  
-      if (isGalleryVisible) {
-          populateCarousel(galleryId, carouselId.replace('carousel', 'carouselImages'), clickedImage);
-          gallery.classList.add('hidden');
-          carousel.classList.remove('hidden');
-          document.getElementById(buttonId).textContent = 'Switch to Gallery';
-      } else {
-          gallery.classList.remove('hidden');
-          carousel.classList.add('hidden');
-          document.getElementById(buttonId).textContent = 'Switch to Slideshow';
-      }
-  }
-  
-  // Toggle button for switching views
-  document.getElementById('toggleButton<%= product.id %>').addEventListener('click', function () {
-      const activeTabId = document.querySelector('#imageTabs<%= product.id %> .nav-link.active').getAttribute('href').substring(1);
-      const galleryId = activeTabId;
-      const carouselId = `carousel<%= product.id %>`;
-      const clickedImage = document.querySelector(`#${galleryId} .gallery-grid img`);
-      toggleView(galleryId, carouselId, this.id, clickedImage);
-  });
-  
-  // Add click event for each image in the grid to switch to slideshow
-  document.querySelectorAll('.gallery-grid img').forEach((image) => {
-      image.addEventListener('click', function () {
-          const activeTabId = this.closest('.tab-pane').id;
-          const galleryId = activeTabId;
-          const carouselId = `carousel<%= product.id %>`;
-          toggleView(galleryId, carouselId, 'toggleButton<%= product.id %>', this);
-      });
-  });
-  
-  </script>
+</style>
