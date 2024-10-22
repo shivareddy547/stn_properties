@@ -1,5 +1,5 @@
 PATH
-  remote: spree_admin_roles_and_access
+  remote: vendor/gems/spree_admin_roles_and_access
   specs:
     spree_admin_roles_and_access (3.pre.0.pre.stable)
       spree_auth_devise
