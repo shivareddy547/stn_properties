@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_09_28_043423) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_20_142242) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -141,6 +141,8 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_28_043423) do
     t.datetime "updated_at", precision: nil
     t.jsonb "public_metadata"
     t.jsonb "private_metadata"
+    t.bigint "option_type_id"
+    t.index ["option_type_id"], name: "index_spree_assets_on_option_type_id"
     t.index ["position"], name: "index_spree_assets_on_position"
     t.index ["viewable_id"], name: "index_assets_on_viewable_id"
     t.index ["viewable_type", "type"], name: "index_assets_on_viewable_type_and_type"
@@ -785,6 +787,16 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_28_043423) do
     t.jsonb "private_metadata"
     t.string "status", default: "draft", null: false
     t.datetime "make_active_at", precision: nil
+    t.string "city"
+    t.string "state"
+    t.string "country"
+    t.float "latitude"
+    t.float "longitude"
+    t.string "address1"
+    t.string "address2"
+    t.string "pincode"
+    t.string "country_code"
+    t.decimal "rating"
     t.index ["available_on"], name: "index_spree_products_on_available_on"
     t.index ["deleted_at"], name: "index_spree_products_on_deleted_at"
     t.index ["discontinue_on"], name: "index_spree_products_on_discontinue_on"
@@ -1668,6 +1680,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_09_28_043423) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "spree_assets", "spree_option_types", column: "option_type_id"
   add_foreign_key "spree_oauth_access_grants", "spree_oauth_applications", column: "application_id"
   add_foreign_key "spree_oauth_access_tokens", "spree_oauth_applications", column: "application_id"
   add_foreign_key "spree_option_type_translations", "spree_option_types"

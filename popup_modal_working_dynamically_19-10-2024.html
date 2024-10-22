@@ -1,0 +1,158 @@
+<div class="row mb-3" style="border: 1px solid #ccc; border-radius: 10px; padding: 0px;">
+  
+  <!-- Row Header with Notification Text -->
+  <div class="col-12 mb-1 p-0">
+    <div class="header-notification" style="background-color: rgb(31, 54, 117); color: white; padding: 5px; text-align: center; border-radius: 10px 10px 0 0;">
+      <h2 class="mb-0">Exclusive Hotel Deals - Limited Time Offer!</h2>
+    </div>
+  </div>
+
+  <!-- Part 1: Image Gallery (Main Image and Thumbnail Row) -->
+  <style>
+    .main-img-thumbnail{
+      max-height: 400px; object-fit: cover; width: 100%;
+    }
+    .img-fluid-thumb{
+      height: 100px; object-fit: cover; width: 100px;
+    }
+  </style>
+
+<div class="col-4 product">
+  <% if product.images.size > 1 %>
+    <div class="text-center mainImage">
+      <%= image_tag(main_app.cdn_image_url(product.images[0].url(:product)), class: "main-img-thumbnail","data-toggle": "modal", id: "mainImage#{product.id}", "data-target":"#imageGalleryModal#{product.id}", "data-original-src": main_app.cdn_image_url(product.images[0].url(:product))) %>
+    </div>
+    
+    <div class="d-flex justify-content-between align-items-center mt-3 thumbnails">
+      <% product.images.first(4).each_with_index do |i, index| %>
+        <%= link_to image_tag(main_app.cdn_image_url(i.url(:product)), class: "img-fluid img-fluid-thumb thumbnail-img"), "#", class: "thumbnail", "data-product-id": product.id, "data-img-url": main_app.cdn_image_url(i.url(:product)), "data-toggle": "modal", "data-target": "#imageGalleryModal#{product.id}", onclick: "openSlideshow(#{index})" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<% @product= product %>
+<% @variants = product.variants  %>
+  <% url = spree.product_path(product, taxon_id: @taxon.try(:id)) %>
+
+  <% is_product_available_in_currency = product_available_in_currency? %>
+<% default_variant = default_variant(@variants, @product) %>
+  
+  <!-- Part 2: Product Details -->
+  <div class="col-5">
+    
+      <%= link_to url,style:"text-decoration: none; color: inherit;" do %>
+      <div class="product-component-name" title="The LaLiT Mumbai">
+        <%= content_tag(:span, truncate(product.name, length: 50), class: 'info mt-3 d-block', title: product.name) %>
+
+      </div>
+      <div class="product-rating-location" style="font-size: 14px; color: #666;">
+        <span class="rating">★★★★☆</span> <!-- Example rating -->
+        <span class="location">Location: Mumbai, India</span>
+      </div>
+
+      <!-- Property Offers Section -->
+      <div class="offers-section" style="margin-top: 10px;">
+        <strong>This property offers:</strong>
+        <div class="offers" style="margin-top: 5px; position: relative;">
+          <span class="offer-box" style="display: inline-block; background-color: #f8f8f8; border: 1px solid #ccc; border-radius: 5px; padding: 5px 10px; margin: 2px;">Breakfast Included</span>
+          <span class="offer-box" style="display: inline-block; background-color: #f8f8f8; border: 1px solid #ccc; border-radius: 5px; padding: 5px 10px; margin: 2px;">Free Wifi</span>
+          <span class="offer-box more" style="display: inline-block; background-color: #f8f8f8; border: 1px solid #ccc; border-radius: 5px; padding: 5px 10px; margin: 2px;">
+            <span class="more">More</span>
+          </span>
+        </div>
+      </div>
+     
+<% end %>
+  </div>
+
+  <!-- Dotted Line Separator -->
+  <div class="col-1" style="border-left: 1px dotted #ccc; height: 100%;"></div>
+
+  <!-- Part 3: Price Details -->
+  <div class="col-2 text-right">
+    <div class="review-section" style="font-size: 16px; color: #2a6ebd;">
+      <strong>8.6 Excellent</strong><br>
+      <span style="font-size: 12px; color: #666;">584 reviews</span>
+    </div>
+    
+    <div class="offer-section mt-2" style="color: #d9534f;">
+      <span style="background-color: #ff6666; color: white; padding: 5px; border-radius: 5px;"><%= discount_percentage = ((default_variant.compare_at_price - default_variant.price) / default_variant.compare_at_price) * 100 %>% OFF TODAY</span>
+      <div style="color: #f77f7f;">Price has increased</div>
+    </div>
+
+    <div class="price-section mt-2">
+    
+      <div style="text-decoration: line-through; font-size: 18px; color: #666;"><%= display_price(default_variant) %></div>
+      <% if should_display_compare_at_price?(default_variant) %>
+      <div style="font-size: 24px; color: #d9534f;"><strong><%= display_compare_at_price(default_variant) %></strong></div>
+      <% end %>
+      <div style="font-size: 12px; color: #999;">Per night before taxes and fees</div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="container mt-5">
+  <h1>Product List</h1>
+  <div class="product-list">
+      <div class="product mb-3" data-product-id="1">
+          <h3>Product 1</h3>
+          <button class="btn btn-primary open-modal" data-modal-target="#productModal<%= product.id %>">View Images</button>
+      </div>
+   
+  </div>
+</div>
+<% img_option_types =  Spree::OptionType.where(id: product.images.map{|a| a.option_type_id}.uniq).order(position: :asc).pluck(:id,:name) %>
+<div class="modal fade" id="productModal<%= product.id %>" tabindex="-1" aria-labelledby="productModal<%= product.id %>Label" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="productModal<%= product.id %>Label"></h5>
+              <button type="button" class="btn-close close-button" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <ul class="nav nav-tabs" id="myTab<%= product.id %>" role="tablist">
+                <% img_option_types.each_with_index do |each_tab,index| %>
+                  <li class="nav-item">
+                      <a class="nav-link <%= index == 0 ? 'active' : ''%>" id="tab<%=product.id %>-<%= index %>-tab" data-bs-toggle="tab" href="#tab<%=product.id %>-<%=index %>" role="tab"
+                          aria-controls="tab<%=product.id %>-<%=index %>" aria-selected="true"><%= each_tab[1] == "default" ? "all" : each_tab[1] %></a>
+                  </li>
+
+                  <% end %>
+                 
+              </ul>
+              <div class="tab-content" id="myTabContent<%=product.id %>">
+                <% img_option_types.each_with_index do |each_tab,index| %>
+                  <div class="tab-pane fade show <%= index == 0 ? 'active' : ''%>" id="tab<%=product.id %>-<%=index %>" role="tabpanel">
+                      <div class="gallery">
+                       <% product.images.where(option_type_id: each_tab[0]).each do |img| %>
+                        
+
+                          <%= image_tag(main_app.cdn_image_url(img.url(:product))) %>
+
+                          <% end %>
+                          
+                      </div>
+                      <button class="btn btn-secondary toggle-button" id="toggleButton<%=product.id %>-<%=index %>">Switch to Slideshow</button>
+                  </div>
+                <% end %>
+              </div>
+              <div id="carousel<%=product.id %>" class="carousel slide hidden" data-bs-ride="carousel">
+                  <div class="carousel-inner" id="carouselImages<%=product.id %>"></div>
+                  <button class="carousel-control-prev" type="button" data-bs-target="#carousel<%=product.id %>" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#carousel<%=product.id %>" data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+ 

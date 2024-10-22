@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bootstrap Modal Gallery with Slideshow</title>
+  <!-- Bootstrap 4 CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .modal-content {
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    
+    .nav-tabs .nav-link.active {
+      border-bottom: 3px solid blue;
+      color: blue;
+    }
+
+    .gallery img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      cursor: pointer;
+      border-radius: 5px;
+      margin: 5px;
+    }
+
+    .slideshow {
+      display: none;
+      position: relative;
+      text-align: center;
+    }
+
+    .slideshow.active {
+      display: block;
+    }
+
+    .carousel-item {
+      display: none;
+    }
+
+    .carousel-item.active {
+      display: block;
+    }
+
+    .carousel img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .prev, .next {
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      width: auto;
+      padding: 10px;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+      transition: 0.6s ease;
+      user-select: none;
+    }
+
+    .prev {
+      left: 0;
+    }
+
+    .next {
+      right: 0;
+    }
+
+    .prev:hover, .next:hover {
+      background-color: rgba(0,0,0,0.8);
+    }
+
+    /* Right side facilities */
+    .modal-right {
+      background-color: #f1f1f1;
+      padding: 15px;
+    }
+
+    .carousel-caption {
+      position: absolute;
+      bottom: 15%;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Button to Open Modal -->
+<button id="openModalBtn" class="btn btn-primary" data-toggle="modal" data-target="#galleryModal">Open Gallery Modal</button>
+
+<!-- The Modal -->
+<div id="galleryModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Gallery</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body d-flex">
+        <!-- Left section -->
+        <div class="modal-left flex-grow-1">
+          
+          <!-- Toggle Button -->
+          <button class="btn btn-secondary mb-3" id="toggleViewBtn">Show Slideshow</button>
+          
+          <!-- Tab Buttons -->
+          <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" data-toggle="tab" href="#tab1">Tab 1</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#tab2">Tab 2</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#tab3">Tab 3</a>
+            </li>
+          </ul>
+
+          <!-- Tab Content -->
+          <div class="tab-content">
+            <div id="tab1" class="tab-pane fade show active">
+              <div class="gallery d-flex flex-wrap">
+                <img src="https://pix8.agoda.net/hotelImages/70697/0/b8d18c051d274c6e45b98e6e15deb7e0.jpg?ca=0&ce=1&s=375x" onclick="openSlideshow(0, 'tab1')">
+                <img src="https://q-xx.bstatic.com/xdata/images/hotel/max1024x768/34698397.jpg?k=a7ae370acab8f575af24b23e75f4b9ac633692cb9eee17dd40b115cffb503f39&o=&s=375x" onclick="openSlideshow(1, 'tab1')">
+                <img src="https://q-xx.bstatic.com/xdata/images/hotel/max1024x768/33284233.jpg?k=0a0821e3ad9ea639804e4483814cc6f6ec7c57a9f1a7c44d7a09ace923b4493d&o=&s=375x" onclick="openSlideshow(2, 'tab1')">
+              </div>
+              <div class="slideshow">
+                <div class="carousel">
+                  <div class="carousel-item active">
+                    <img src="https://pix8.agoda.net/hotelImages/70697/0/b8d18c051d274c6e45b98e6e15deb7e0.jpg?ca=0&ce=1&s=375x">
+                    <div class="carousel-caption">Image 1 description</div>
+                  </div>
+                  <div class="carousel-item">
+                    <img src="https://q-xx.bstatic.com/xdata/images/hotel/max1024x768/34698397.jpg?k=a7ae370acab8f575af24b23e75f4b9ac633692cb9eee17dd40b115cffb503f39&o=&s=375x">
+                    <div class="carousel-caption">Image 2 description</div>
+                  </div>
+                  <div class="carousel-item">
+                    <img src="https://q-xx.bstatic.com/xdata/images/hotel/max1024x768/33284233.jpg?k=0a0821e3ad9ea639804e4483814cc6f6ec7c57a9f1a7c44d7a09ace923b4493d&o=&s=375x">
+                    <div class="carousel-caption">Image 3 description</div>
+                  </div>
+                </div>
+                <!-- Previous and Next Buttons -->
+                <a class="prev" onclick="changeSlide(-1, 'tab1')">&#10094;</a>
+                <a class="next" onclick="changeSlide(1, 'tab1')">&#10095;</a>
+              </div>
+            </div>
+
+            <div id="tab2" class="tab-pane fade">
+              <div class="gallery d-flex flex-wrap">
+                <img src="https://q-xx.bstatic.com/xdata/images/hotel/max1024x768/12523078.jpg?k=f684476306cc585bdafb0813b724f4bbc7db4a28921c0c050592feb5119ad23a&o=&s=375x" onclick="openSlideshow(0, 'tab2')">
+                <img src="https://pix8.agoda.net/hotelImages/70697/-1/3c6f6f4e08a1e2b6234144178b7d9183.jpg?ca=7&ce=1&s=375x" onclick="openSlideshow(1, 'tab2')">
+                <img src="https://q-xx.bstatic.com/xdata/images/hotel/max1024x768/152817438.jpg?k=6d6e41dd08750127f8908845da24bfc160fb1a31fc05c522e5d4884dcfccb217&o=&s=375x" onclick="openSlideshow(2, 'tab2')">
+              </div>
+              <div class="slideshow">
+                <div class="carousel">
+                  <div class="carousel-item active">
+                    <img src="https://q-xx.bstatic.com/xdata/images/hotel/max1024x768/12523078.jpg?k=f684476306cc585bdafb0813b724f4bbc7db4a28921c0c050592feb5119ad23a&o=&s=375x">
+                    <div class="carousel-caption">Image A description</div>
+                  </div>
+                  <div class="carousel-item">
+                    <img src="https://pix8.agoda.net/hotelImages/70697/-1/3c6f6f4e08a1e2b6234144178b7d9183.jpg?ca=7&ce=1&s=375x">
+                    <div class="carousel-caption">Image B description</div>
+                  </div>
+                  <div class="carousel-item">
+                    <img src="https://q-xx.bstatic.com/xdata/images/hotel/max1024x768/152817438.jpg?k=6d6e41dd08750127f8908845da24bfc160fb1a31fc05c522e5d4884dcfccb217&o=&s=375x">
+                    <div class="carousel-caption">Image C description</div>
+                  </div>
+                </div>
+                <!-- Previous and Next Buttons -->
+                <a class="prev" onclick="changeSlide(-1, 'tab2')">&#10094;</a>
+                <a class="next" onclick="changeSlide(1, 'tab2')">&#10095;</a>
+              </div>
+            </div>
+
+            <div id="tab3" class="tab-pane fade">
+              <div class="gallery d-flex flex-wrap">
+                <img src="https://pix8.agoda.net/geo/poi/26596/2_26596.jpg?ca=6&ce=1&s=375x" onclick="openSlideshow(0, 'tab3')">
+                <img src="https://pix8.agoda.net/geo/poi/140082/2_140082_03.jpg?ca=7&ce=1&s=375x" onclick="openSlideshow(1, 'tab3')">
+                <img src="https://pix8.agoda.net/geo/poi/1506989/7957c7af4756100484b85a32d8d4fc38.jpg?ca=19&ce=1&s=375x" onclick="openSlideshow(2, 'tab3')">
+              </div>
+              <div class="slideshow">
+                <div class="carousel">
+                  <div class="carousel-item active">
+                    <img src="https://pix8.agoda.net/geo/poi/26596/2_26596.jpg?ca=6&ce=1&s=375x">
+                    <div class="carousel-caption">Image X description</div>
+                  </div>
+                  <div class="carousel-item">
+                    <img src="https://pix8.agoda.net/geo/poi/140082/2_140082_03.jpg?ca=7&ce=1&s=375x">
+                    <div class="carousel-caption">Image Y description</div>
+                  </div>
+                  <div class="carousel-item">
+                    <img src="https://pix8.agoda.net/geo/poi/1506989/7957c7af4756100484b85a32d8d4fc38.jpg?ca=19&ce=1&s=375x">
+                    <div class="carousel-caption">Image Z description</div>
+                  </div>
+                </div>
+                <!-- Previous and Next Buttons -->
+                <a class="prev" onclick="changeSlide(-1, 'tab3')">&#10094;</a>
+                <a class="next" onclick="changeSlide(1, 'tab3')">&#10095;</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right section -->
+        <div class="modal-right">
+          <h5>Facilities</h5>
+          <ul>
+            <li>Airport Transfer</li>
+            <li>Free Wi-Fi</li>
+            <li>Steam Room</li>
+            <li>Air Conditioning</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- jQuery and Bootstrap 4 JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+  var modal = document.getElementById('galleryModal');
+  var openModalBtn = document.getElementById('openModalBtn');
+  var toggleViewBtn = document.getElementById('toggleViewBtn');
+
+  openModalBtn.onclick = function() {
+    $('#galleryModal').modal('show');
+  }
+
+  // Toggle between Gallery and Slideshow view
+  toggleViewBtn.onclick = function() {
+    var activeTab = document.querySelector('.tab-pane.active');
+    var gallery = activeTab.querySelector('.gallery');
+    var slideshow = activeTab.querySelector('.slideshow');
+
+    if (gallery.style.display !== 'none') {
+      gallery.style.display = 'none';
+      slideshow.style.display = 'block';
+      toggleViewBtn.textContent = 'Show Gallery';
+    } else {
+      gallery.style.display = 'flex';
+      slideshow.style.display = 'none';
+      toggleViewBtn.textContent = 'Show Slideshow';
+    }
+  }
+
+  // Open specific slide in slideshow
+  function openSlideshow(index, tabId) {
+    var activeTab = document.getElementById(tabId);
+    var slides = activeTab.querySelectorAll('.carousel-item');
+    
+    // Hide all slides first
+    slides.forEach(function(slide) {
+      slide.classList.remove('active');
+    });
+
+    // Show the clicked slide
+    slides[index].classList.add('active');
+
+    // Switch to slideshow view
+    var slideshow = activeTab.querySelector('.slideshow');
+    var gallery = activeTab.querySelector('.gallery');
+    gallery.style.display = 'none';
+    slideshow.style.display = 'block';
+    toggleViewBtn.textContent = 'Show Gallery';
+  }
+
+  // Change slides
+  function changeSlide(n, tabId) {
+    var activeTab = document.getElementById(tabId);
+    var slides = activeTab.querySelectorAll('.carousel-item');
+    var currentIndex = Array.prototype.indexOf.call(slides, activeTab.querySelector('.carousel-item.active'));
+    
+    // Remove active class from current slide
+    slides[currentIndex].classList.remove('active');
+
+    // Calculate new index
+    var newIndex = (currentIndex + n + slides.length) % slides.length;
+    slides[newIndex].classList.add('active');
+  }
+
+  // Close modal when clicking outside of it
+  window.onclick = function(event) {
+    if (event.target === modal) {
+      $('#galleryModal').modal('hide');
+    }
+  }
+</script>
+</body>
+</html>

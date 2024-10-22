@@ -1,0 +1,851 @@
+<div class="container">
+    <h1 class="mb-4">Hotel Room Gallery</h1>
+    <div class="gallery">
+      <div class="main-image">
+        <img src="https://picsum.photos/seed/sqwLlsI95qMCS4sc0zKOx/512" alt="Main Room View" class="img-fluid">
+      </div>
+      <div class="side-images">
+        <img src="https://picsum.photos/seed/GG6J9qGKen7GEfv0cwYLU/512" alt="Image 1" class="img-fluid">
+        <img src="https://picsum.photos/seed/kP94Wd6wYNsQ24xgvCMJc/512" alt="Image 2" class="img-fluid">
+        <img src="https://picsum.photos/seed/1JBFVwrZliPBd1sVMddOk/512" alt="Image 3" class="img-fluid">
+        <img src="https://picsum.photos/seed/PsXpzJwIxiiB-yP5Xeq5M/512" alt="Image 4" class="img-fluid">
+        <img src="https://picsum.photos/seed/7N0fh-2FAPvZJecqpa34N/512" alt="Image 5" class="img-fluid">
+        <img src="https://picsum.photos/seed/1FX6Pp53jTSiWfPV0AKfB/512" alt="Image 6" class="img-fluid">
+      </div>
+    </div>
+  </div>
+  
+    <script>
+          // Example vanilla JavaScript to add some interactivity
+  document.addEventListener("DOMContentLoaded", function() {
+    const images = document.querySelectorAll('.gallery img');
+    images.forEach(image => {
+      image.addEventListener('click', function() {
+        alert('Image clicked: ' + this.alt);
+      });
+    });
+  });
+    </script>
+
+    <style>
+
+    /* Custom styles for the gallery */
+    .container {
+      max-width: 1099px; /* Reduced container width */
+      padding: 30px;
+    }
+    .gallery {
+      display: flex;
+      gap: 1px;
+      align-items: stretch; /* Ensures that all items stretch to the same height */
+      height: 350px; /* Adjusted height */
+    }
+    .main-image {
+      flex: 0 0 40%; /* Takes up 40% width */
+      height: 100%;
+    }
+    .main-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+    .side-images {
+      flex: 0 0 60%; /* Takes up 60% width */
+      display: grid;
+      grid-template-columns: repeat(3, 1fr); /* 3 columns */
+      grid-template-rows: 1fr 0.7fr; /* Adjusted height of rows, smaller row below */
+      gap: 1px;
+      height: 100%;
+      align-items: stretch; /* Ensure that all images stretch to fill their space */
+    }
+    .side-images img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+  
+    </style>
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+   
+<style>
+     .my-show{
+    /* Additional styling for popover content */
+    .popover {
+      max-width: 1000px; /* Adjust the width of the popover */
+    }
+    .popover-header {
+      font-weight: bold;
+      background-color: #f8f9fa;
+    }
+}
+  </style>
+
+  
+
+    <!-- Bootstrap 4 JS and dependencies -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  
+  <script>
+    // Wait for the DOM content to load
+    document.addEventListener('DOMContentLoaded', function() {
+      var facilitiesPopover = document.getElementById('facilitiesPopover');
+
+      // Create the content for the popover
+      var popoverContent = `
+        <div class="row">
+          <div class="col-md-6">
+            <h6>Kitchen</h6>
+            <ul class="list-unstyled">
+              <li><i class="fas fa-coffee"></i> Electric kettle</li>
+            </ul>
+            <h6>Bathroom and Toiletries</h6>
+            <ul class="list-unstyled">
+              <li><i class="fas fa-bath"></i> Bathrobes</li>
+              <li><i class="fas fa-mirror"></i> Mirror</li>
+              <li><i class="fas fa-soap"></i> Toiletries</li>
+              <li><i class="fas fa-shower"></i> Walk-in shower</li>
+              <li><i class="fas fa-wind"></i> Hair dryer</li>
+              <li><i class="fas fa-toilet-paper"></i> Towels</li>
+              <li><i class="fas fa-bath"></i> Private bathroom</li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <h6>Entertainment</h6>
+            <ul class="list-unstyled">
+              <li><i class="fas fa-wifi"></i> Free Wi-Fi in all rooms!</li>
+              <li><i class="fas fa-tv"></i> Satellite/cable channels</li>
+              <li><i class="fas fa-music"></i> iPod docking station</li>
+              <li><i class="fas fa-phone"></i> Telephone</li>
+            </ul>
+            <h6>Comforts</h6>
+            <ul class="list-unstyled">
+              <li><i class="fas fa-snowflake"></i> Air conditioning</li>
+              <li><i class="fas fa-bed"></i> Slippers</li>
+              <li><i class="fas fa-clock"></i> Alarm clock</li>
+              <li><i class="fas fa-bed"></i> Linens</li>
+              <li><i class="fas fa-bell"></i> Wake-up service</li>
+            </ul>
+          </div>
+        </div>
+      `;
+
+      // Initialize popover using Bootstrap's built-in JavaScript
+      var popover = new bootstrap.Popover(facilitiesPopover, {
+        trigger: 'hover', // Show on hover
+        html: true,       // Allow HTML content
+        placement: 'right', // Position the popover
+        title: 'Room Facilities', // Title of the popover
+        content: popoverContent
+      });
+    });
+  </script>
+
+<% @variants_by_room_type = @product.variants.joins(:option_values)
+.group_by do |variant| 
+  room_type_value = variant.option_values.find { |ov| ov.option_type.name == 'room_type' }
+  room_type_value&.presentation # Safely handle cases where no room_type is found
+end %>
+
+
+
+<% @benefit_types = ['free_cancellation', 'free_wifi', 'city_view', 'non_smoking']  %>
+<% @optional_benefit_types = ['breakfast', 'early_checkin', 'late_checkout'] %>
+<% @variants_by_room_type.each do |room_type, variants| %>
+
+<div class="container my-show mt-5">
+    <h2 class="text-center mb-4"><%= room_type %></h2>
+    <div class="split-table">
+        
+        <div class="table-col1">
+            
+            <div class="room-details mb-4">
+                <img src="https://picsum.photos/seed/lEpr4-mARq_WKnSOdd4Uq/512" alt="Room photo 1" class="img-fluid main-image">
+                <img src="https://picsum.photos/seed/7XTRv2IqnVtgkZnJSrm3O/512" alt="Room photo 1 zoomed" class="img-fluid zoom-image">
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <img src="https://picsum.photos/seed/w6w3JezSnLIIfJWWjgx44/512" alt="Room photo 2" class="img-fluid" onmouseover="showZoomImage(this.src)">
+                    </div>
+                    <div class="col-6">
+                        <img src="https://picsum.photos/seed/vPQgK1tuziN15M6sXQVr-/512" alt="Room photo 3" class="img-fluid" onmouseover="showZoomImage(this.src)">
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="facility">
+                <i class="fas fa-bed me-2"></i>
+                <span>2 single beds</span>
+            </div>
+            <div class="facility">
+                <i class="fas fa-ruler-combined me-2"></i>
+                <span>Room size: 41 m² / 441 ft²</span>
+            </div>
+            <div class="facility">
+                <i class="fas fa-city me-2"></i>
+                <span>City view</span>
+            </div>
+            <div class="facility">
+                <i class="fas fa-smoking-ban me-2"></i>
+                <span>Non-smoking</span>
+            </div>
+            <div class="facility">
+                <i class="fas fa-shower me-2"></i>
+                <span>Separate shower/bathtub</span>
+            </div>
+            <div>
+                <a href="#" id="facilitiesPopover" class="text-primary">See all room facilities</a>
+            </div>
+        </div>
+
+        
+        <div class="table-col2">
+            <div class="benefit-header row p-2">
+                <div class="col-md-4">Benefits</div>
+                <div class="col-md-1">Sleeps</div>
+                <div class="col-md-2">Price per night</div>
+                <div class="col-md-1">Quantity</div>
+                <div class="col-md-4">Most Booked</div>
+            </div>
+            <% variants.uniq.each do |variant| %>
+            <div class="row p-2 border-bottom">
+                <div class="col-md-4 table-border">
+                  
+                    <div class="col-md-12">
+                        <p><strong>Your price includes:</strong></p>
+                        <ul>
+                          <% variant.option_values.each do |option_value| %>
+                        <% if @benefit_types.include?(option_value.option_type.name) %>
+                            <li><%= option_value.option_type.presentation %> <%= option_value.presentation %></li>
+                            <% end %>
+                            <% end %>
+
+                        </ul>
+                        <p><strong>Optional benefit:</strong></p>
+                        <ul>
+                          <% variant.option_values.each do |option_value| %>
+                          <% if @optional_benefit_types.include?(option_value.option_type.name) %>
+                            <% if option_value.name == 'breakfast' %>
+                              <li>Breakfast at Rs. <%= variant.option_values.find_by(name: 'breakfast_price')&.presentation || 'N/A' %></li>
+                            <% else %>
+                              <li><%= option_value.option_type.presentation %> <%= option_value.presentation %></li>
+                            <% end %>
+                          <% end %>
+                        <% end %>
+                        </ul>
+                    </div>
+                </div>
+                <% @adults = nil %>
+                <% @rooms = nil %>
+                <% @kids = nil %>
+                <% @kids_age = nil %>
+                <% variant.option_values.each do |option_value| %>
+                <% if option_value.option_type.name == 'Room Count' %>
+                <% @rooms = option_value.presentation %>
+                <% elsif option_value.option_type.name == 'Adults Count' %>
+                <% @adults = option_value.presentation %>
+                <% elsif option_value.option_type.name == 'Kids Count' %>
+                <% @kids = option_value.presentation %>
+                <% elsif option_value.option_type.name == 'Kids Age Range' %>
+                <% @kids_age = option_value.presentation %>
+                <% end %>
+                <% end %>
+              
+                <div class="col-md-1 table-border">
+                  <div class="kids-stay-free">
+                    <i class="fas fa-info-circle"></i>
+                    <div class="icon-group">
+                      <% @adults.to_i.times  do |e| %>
+                      <i class="fas fa-male"></i>
+                      <% end %>
+                      <br>
+                      <% @kids.to_i.times  do |e| %> 
+                      <i class="fas fa-child"></i>
+                      <% end %>
+                    </div>
+                    <div class="kids-info">
+                      <p><%= @kids.to_i %> kids <br> under <%= @kids_age%> <br> years stay</p>
+                      <span class="free-text">FREE!</span>
+                    </div>
+                
+                    <!-- Tooltip container -->
+                    <div class="tooltip">
+                      <div class="tooltip-text">
+                        This offer includes <%= @adults.to_i %> Adults, <%= @kids.to_i %> Kids under <%= @kids_age%> years stay free.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                
+                <div class="col-md-2 price table-border">Rs. 14,000</div>
+                <div class="col-md-1 table-border">
+                    <input type="number" class="form-control" value="1">
+                </div>
+                <div class="col-md-4 most-booked">
+                    <div class="container mt-3">
+                        <div class="text-center mb-3">
+                            <button class="btn btn-primary btn-block">Book now</button>
+                        </div>
+                        <div class="text-center mb-3">
+                            <button class="btn btn-outline-primary btn-block">Add to cart</button>
+                        </div>
+                        <div class="alert custom-alert text-center font-weight-bold mb-3">
+                            <span class="text-success">NO RISK!</span> <br>
+                            <small class="text-muted">No cancellation fee</small>
+                        </div>
+                        <div class="text-center limited-text font-weight-bold">
+                            Limited availability
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% end %>
+
+            
+          
+
+            
+        </div>
+    </div>
+</div>
+
+<% end %>
+
+<style>
+  .col-md-1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Horizontally center */
+  justify-content: center; /* Vertically center */
+  height: 100%; /* Ensure it fills the height of the column */
+  position: relative; /* Needed for the tooltip */
+}
+
+.kids-stay-free {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.kids-stay-free i.fa-info-circle {
+  font-size: 24px;
+  margin-bottom: 10px; /* Add some space below the icon */
+}
+
+.icon-group {
+  display: flex;
+  justify-content: center;
+}
+
+.icon-group i {
+  margin: 0 2px;
+  font-size: 20px;
+}
+
+.kids-info {
+  text-align: center;
+}
+
+.kids-info p {
+  margin: 0;
+  font-size: 14px;
+}
+
+.kids-info .free-text {
+  font-size: 16px;
+  color: green;
+  font-weight: bold;
+}
+
+/* Tooltip styles remain the same */
+.tooltip {
+  visibility: hidden;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  border-radius: 6px;
+  width: 250px;
+  position: absolute;
+  z-index: 1;
+  top: -30%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #333 transparent;
+}
+
+.kids-stay-free:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+</style>
+
+
+<script>
+
+
+function showZoomImage(imageSrc) {
+        const zoomImage = document.querySelector('.zoom-image');
+        zoomImage.src = imageSrc; // Set the source of the zoom image
+    }
+
+  // Example vanilla JavaScript to add some interactivity
+  document.addEventListener("DOMContentLoaded", function() {
+    const images = document.querySelectorAll('.gallery img');
+    images.forEach(image => {
+      image.addEventListener('click', function() {
+        alert('Image clicked: ' + this.alt);
+      });
+    });
+  });
+
+</script>
+<style>
+
+.my-show {
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            overflow: hidden;
+            position: relative; /* Establish a containing block for absolutely positioned elements */
+        }
+        .split-table {
+            display: flex;
+            margin: 0;
+        }
+        .table-col1,
+        .table-col2 {
+            padding: 15px;
+        }
+        .facility {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .table-border {
+            border: 1px solid #dee2e6;
+            padding: 10px;
+        }
+        .most-booked {
+            padding: 0;
+        }
+        .custom-alert {
+            background-color: #e7f3fe;
+            border-left: 6px solid #007bff;
+        }
+
+        /* Styles for room photos with zoom effect */
+        .room-details {
+            position: relative; /* Position relative for absolute positioning of the zoomed image */
+        }
+        .room-details img {
+            transition: transform 0.3s ease; /* Transition for smooth zoom */
+            cursor: pointer; /* Cursor pointer on hover */
+        }
+
+        .zoom-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            z-index: 1; /* Behind the main image */
+            display: none; /* Hide initially */
+            border-radius: 10px; /* Round corners */
+        }
+
+        .room-details:hover .zoom-image {
+            display: block; /* Show on hover */
+        }
+
+        .room-details:hover .main-image {
+            z-index: 2; /* Bring the main image to the front */
+        }
+
+        .benefit-image {
+            max-width: 100%; /* Ensure the image fits */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 10px; /* Round corners */
+        }
+    
+</style>
+
+<!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> -->
+
+    
+    <!-- Font Awesome for icons -->
+ 
+    <!-- Bootstrap 4 JS and dependencies -->
+
+  <script>
+    // Wait for the DOM content to load
+    document.addEventListener('DOMContentLoaded', function() {
+      var facilitiesPopover = document.getElementById('facilitiesPopover');
+
+      // Create the content for the popover
+      var popoverContent = `
+        <div class="row">
+          <div class="col-md-6">
+            <h6>Kitchen</h6>
+            <ul class="list-unstyled">
+              <li><i class="fas fa-coffee"></i> Electric kettle</li>
+            </ul>
+            <h6>Bathroom and Toiletries</h6>
+            <ul class="list-unstyled">
+              <li><i class="fas fa-bath"></i> Bathrobes</li>
+              <li><i class="fas fa-mirror"></i> Mirror</li>
+              <li><i class="fas fa-soap"></i> Toiletries</li>
+              <li><i class="fas fa-shower"></i> Walk-in shower</li>
+              <li><i class="fas fa-wind"></i> Hair dryer</li>
+              <li><i class="fas fa-toilet-paper"></i> Towels</li>
+              <li><i class="fas fa-bath"></i> Private bathroom</li>
+            </ul>
+          </div>
+          <div class="col-md-6">
+            <h6>Entertainment</h6>
+            <ul class="list-unstyled">
+              <li><i class="fas fa-wifi"></i> Free Wi-Fi in all rooms!</li>
+              <li><i class="fas fa-tv"></i> Satellite/cable channels</li>
+              <li><i class="fas fa-music"></i> iPod docking station</li>
+              <li><i class="fas fa-phone"></i> Telephone</li>
+            </ul>
+            <h6>Comforts</h6>
+            <ul class="list-unstyled">
+              <li><i class="fas fa-snowflake"></i> Air conditioning</li>
+              <li><i class="fas fa-bed"></i> Slippers</li>
+              <li><i class="fas fa-clock"></i> Alarm clock</li>
+              <li><i class="fas fa-bed"></i> Linens</li>
+              <li><i class="fas fa-bell"></i> Wake-up service</li>
+            </ul>
+          </div>
+        </div>
+      `;
+
+      // Initialize popover using Bootstrap's built-in JavaScript
+      var popover = new bootstrap.Popover(facilitiesPopover, {
+        trigger: 'hover', // Show on hover
+        html: true,       // Allow HTML content
+        placement: 'right', // Position the popover
+        title: 'Room Facilities', // Title of the popover
+        content: popoverContent
+      });
+    });
+  </script>
+<div class="container my-show mt-5">
+    <div class="split-table">
+        <!-- Column 1 (Room Photos and Facilities) -->
+        <div class="table-col1">
+            <!-- Room photos -->
+            <div class="room-details">
+                <img src="https://via.placeholder.com/300x200" alt="Room photo 1">
+                <div class="row mt-2">
+                    <div class="col-6">
+                        <img src="https://via.placeholder.com/140x100" alt="Room photo 2">
+                    </div>
+                    <div class="col-6">
+                        <img src="https://via.placeholder.com/140x100" alt="Room photo 3">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Room facilities -->
+            <div class="facility">
+                <i class="fas fa-bed"></i>
+                <span>2 single beds</span>
+            </div>
+            <div class="facility">
+                <i class="fas fa-ruler-combined"></i>
+                <span>Room size: 41 m² / 441 ft²</span>
+            </div>
+            <div class="facility">
+                <i class="fas fa-city"></i>
+                <span>City view</span>
+            </div>
+            <div class="facility">
+                <i class="fas fa-smoking-ban"></i>
+                <span>Non-smoking</span>
+            </div>
+            <div class="facility">
+                <i class="fas fa-shower"></i>
+                <span>Separate shower/bathtub</span>
+            </div>
+            <div>
+               
+                <a href="#" id="facilitiesPopover" class="text-primary">See all room facilities</a>
+
+            </div>
+            
+        </div>
+
+        <!-- Column 2 (Repeated headers for multiple rows) -->
+        <div class="table-col2">
+            <!-- Row 1 -->
+            <div class="benefit-header row p-2">
+                <div class="col-md-4">Benefits</div>
+                <div class="col-md-1">Sleeps</div>
+                <div class="col-md-2">Price per night</div>
+                <div class="col-md-1">Quantity</div>
+                <div class="col-md-4">Most Booked</div>
+            </div>
+
+            <div class="row p-2 border-bottom">
+                <div class="col-md-4 table-border">
+                    <div class="col-md-12">
+                        <p><strong>Your price includes:</strong></p>
+                        <ul>
+                            <li>Free cancellation before October 23, 2024</li>
+                            <li>Free WiFi</li>
+                        </ul>
+                        <p><strong>Optional benefit:</strong></p>
+                        <ul>
+                            <li>Breakfast at Rs. 3,500</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-1 table-border">2 Adults</div>
+                <div class="col-md-2 price table-border">Rs. 14,000</div>
+                <div class="col-md-1 table-border">
+                    <input type="number" class="form-control" value="1">
+                </div>
+                <div class="col-md-4 most-booked">
+                    <div class="container mt-3">
+                        <!-- "Book now" button -->
+                        <div class="text-center mb-3">
+                          <button class="btn btn-primary btn-block">Book now</button>
+                        </div>
+                      
+                        <!-- "Add to cart" button -->
+                        <div class="text-center mb-3">
+                          <button class="btn btn-outline-primary btn-block">Add to cart</button>
+                        </div>
+                      
+                        <!-- "No Risk!" section -->
+                        <div class="alert custom-alert text-center font-weight-bold mb-3">
+                          <span class="text-success">NO RISK!</span> <br>
+                          <small class="text-muted">No cancellation fee</small>
+                        </div>
+                      
+                        <!-- "Limited availability" text -->
+                        <div class="text-center limited-text font-weight-bold">
+                          Limited availability
+                        </div>
+                      </div>
+                </div>
+            </div>
+
+            <!-- Row 2 -->
+           
+
+            <div class="row p-2 border-bottom">
+                <div class="col-md-4 table-border">
+                    <div class="col-md-12">
+                        <p><strong>Your price includes:</strong></p>
+                        <ul>
+                            <li>Free cancellation before October 23, 2024</li>
+                            <li>Free WiFi</li>
+                        </ul>
+                        <p><strong>Optional benefit:</strong></p>
+                        <ul>
+                            <li>Breakfast at Rs. 3,500</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-1 table-border">2 Adults</div>
+                <div class="col-md-2 price table-border">Rs. 14,000</div>
+                <div class="col-md-1 table-border">
+                    <input type="number" class="form-control" value="1">
+                </div>
+                <div class="col-md-4 most-booked">
+                    <div class="container mt-3">
+                        <!-- "Book now" button -->
+                        <div class="text-center mb-3">
+                          <button class="btn btn-primary btn-block">Book now</button>
+                        </div>
+                      
+                        <!-- "Add to cart" button -->
+                        <div class="text-center mb-3">
+                          <button class="btn btn-outline-primary btn-block">Add to cart</button>
+                        </div>
+                      
+                        <!-- "No Risk!" section -->
+                        <div class="alert custom-alert text-center font-weight-bold mb-3">
+                          <span class="text-success">NO RISK!</span> <br>
+                          <small class="text-muted">No cancellation fee</small>
+                        </div>
+                      
+                        <!-- "Limited availability" text -->
+                        <div class="text-center limited-text font-weight-bold">
+                          Limited availability
+                        </div>
+                      </div>
+                </div>
+            </div>
+
+        
+            <!-- Add more rows as needed -->
+        </div>
+    </div>
+</div>
+
+
+<!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> -->
+
+    
+    <!-- Font Awesome for icons -->
+  
+    <style>
+        .my-show{
+
+     
+        .split-table {
+            display: table;
+            width: 100%;
+        }
+        .table-col1, .table-col2 {
+            display: table-cell;
+            vertical-align: top;
+        }
+        .table-col1 {
+            width: 16%;
+            padding-right: 20px;
+        }
+        .table-col2 {
+            width: 70%;
+        }
+        .benefit-header {
+            font-weight: bold;
+            background-color: #f8f9fa;
+        }
+        .most-booked {
+            color: green;
+        }
+        .price {
+            color: red;
+            font-weight: bold;
+        }
+        .room-details img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .room-details {
+            margin-bottom: 15px;
+        }
+        .facility {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .facility i {
+            font-size: 20px;
+            margin-right: 10px;
+            color: #007bff;
+        }
+    }
+    </style>
+    <style>
+         .my-show{
+        .split-table {
+            display: table;
+            width: 100%;
+        }
+        .table-col1, .table-col2 {
+            display: table-cell;
+            vertical-align: top;
+        }
+        .table-col1 {
+            width: 16%;
+            padding-right: 20px;
+        }
+        .table-col2 {
+            width: 70%;
+        }
+        .benefit-header {
+            font-weight: bold;
+            background-color: #f8f9fa;
+            padding: 10px;
+        }
+        .price {
+            color: red;
+            font-weight: bold;
+        }
+        .room-details img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .room-details {
+            margin-bottom: 15px;
+        }
+        .facility {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .facility i {
+            font-size: 20px;
+            margin-right: 5px;
+            color: #007bff;
+        }
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        ul li:before {
+            content: '✔';
+            color: green;
+            margin-right: 5px;
+        }
+        .table-border {
+
+            border-right: 1px solid #dee2e6 !important;
+}
+    }
+    </style>
+      <style>
+         .my-show{
+        /* Custom styles for additional spacing */
+        .custom-alert {
+          background-color: #f8fdf8; /* light green background */
+          border: none;
+        }
+        .limited-text {
+          color: #008000; /* green color */
+        }
+    }
+      </style>
+
+<style>
+     .my-show{
+    /* Additional styling for popover content */
+    .popover {
+      max-width: 1000px; /* Adjust the width of the popover */
+    }
+    .popover-header {
+      font-weight: bold;
+      background-color: #f8f9fa;
+    }
+}
+  </style>
+
+    <!-- Bootstrap 4 JS and dependencies -->
+
+  
