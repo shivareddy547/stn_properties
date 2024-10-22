@@ -8,6 +8,9 @@
 //= link spree/frontend/views/spree/shared/product_added_modal.js
 //= link controllers/index.js
 //= link controllers/application.js
+//= link_tree ../builds
+//= link_tree controllers
+
 
 
 //= link select2_locale_en.js
