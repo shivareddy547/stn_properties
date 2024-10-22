@@ -1,5 +1,4 @@
 //= require spree/frontend/api/storefront/cart
-//= require ../shared/product_added_modal
 //= require spree/frontend/views/spree/shared/product_added_modal
 alert("tetetettete")
 var ADD_TO_CART_FORM_SELECTOR = '.add-to-cart-form'
