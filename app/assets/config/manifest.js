@@ -6,6 +6,7 @@
 //= link spree/frontend/all.js
 //= link spree/frontend/all.css
 //= link spree/frontend/views/spree/shared/product_added_modal.js
+//= link controllers/index.js
 
 
 //= link select2_locale_en.js
