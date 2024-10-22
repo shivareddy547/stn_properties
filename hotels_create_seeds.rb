@@ -34,8 +34,93 @@ puts 'Seeded option types and values for room offers and properties.'
 
 
 # db/seeds.rb
+# db/seeds.rb
+
+
+# 1. Create Option Types
+cancellation_policy = Spree::OptionType.find_or_create_by!(name: 'Cancellation Policy', presentation: 'Cancellation Policy')
+breakfast = Spree::OptionType.find_or_create_by!(name: 'Breakfast', presentation: 'Breakfast')
+
+# 2. Create Base Option Values with Dynamic Data
+# For "Cancellation Policy"
+cancellation_value_1 = Spree::OptionValue.find_or_create_by!(name: 'free_cancellation', presentation: 'Free cancellation', option_type: cancellation_policy)
+cancellation_value_1.update(cancellation_days_before_checkin: 2) # Free cancellation 2 days before check-in
+
+cancellation_value_2 = Spree::OptionValue.find_or_create_by!(name: 'non_refundable', presentation: 'Non-refundable', option_type: cancellation_policy)
+
+# For "Breakfast"
+breakfast_value_1 = Spree::OptionValue.find_or_create_by!(name: 'breakfast', presentation: 'Breakfast', option_type: breakfast)
+breakfast_value_1.update(breakfast_price: 3500) # Breakfast price Rs. 3,500
+
+breakfast_value_2 = Spree::OptionValue.find_or_create_by!(name: 'breakfast_per_person', presentation: 'Breakfast per person', option_type: breakfast)
+breakfast_value_2.update(breakfast_price: 840) # Breakfast price Rs. 840/person
+
+# Optional: Display Seed Confirmation
+puts "Option values with custom fields for cancellation and breakfast created successfully!"
+
+
+# 1. Create Option Types
+wifi = Spree::OptionType.find_or_create_by!(name: 'WiFi', presentation: 'WiFi')
+payment_terms = Spree::OptionType.find_or_create_by!(name: 'Payment Terms', presentation: 'Payment Terms')
+
+# 2. Create Option Values for "Cancellation Policy"
+# Spree::OptionValue.find_or_create_by!(name: 'free_cancellation_before', presentation: 'Free cancellation before', option_type: cancellation_policy)
+Spree::OptionValue.find_or_create_by!(name: 'non_refundable', presentation: 'Non-refundable', option_type: cancellation_policy)
+
+# 3. Create Option Values for "WiFi"
+Spree::OptionValue.find_or_create_by!(name: 'free_wifi', presentation: 'Free WiFi', option_type: wifi)
+
+# 4. Create Option Values for "Breakfast"
+# Spree::OptionValue.find_or_create_by!(name: 'breakfast_rs', presentation: 'Breakfast at', option_type: breakfast)
+# Spree::OptionValue.find_or_create_by!(name: 'breakfast_rs', presentation: 'Breakfast available (Rs. 840 / person)', option_type: breakfast)
+
+# 5. Create Option Values for "Payment Terms"
+Spree::OptionValue.find_or_create_by!(name: 'pay_later', presentation: 'Pay later', option_type: payment_terms)
+Spree::OptionValue.find_or_create_by!(name: 'pay_now', presentation: 'Book and pay now', option_type: payment_terms)
+
+# 6. Optional: Display Seed Confirmation
+puts "Option types and values for hotel rooms created successfully!"
 
 # db/seeds.rb
+#
+# Define the option types for benefits and optional benefits
+benefits_option_types = ['free_cancellation', 'free_wifi', 'non_smoking', 'city_view']
+optional_benefits_option_types = ['breakfast', 'early_checkin', 'late_checkout']
+
+# Method to safely find or create option types with normalized names
+def find_or_create_option_type(name)
+  normalized_name = name.downcase
+
+  # Attempt to find the existing option type
+  option_type = Spree::OptionType.find_by(name: normalized_name)
+
+  # If it doesn't exist, create it
+  unless option_type
+    begin
+      option_type = Spree::OptionType.create!(
+        name: normalized_name,
+        presentation: name.humanize,
+        filterable: true
+      )
+    rescue ActiveRecord::RecordInvalid => e
+      # Handle race condition where the record is created by another process
+      option_type = Spree::OptionType.find_by(name: normalized_name)
+    end
+  end
+
+  option_type
+end
+
+# Create or find the option types for benefits
+benefits_option_types.each do |name|
+  find_or_create_option_type(name)
+end
+
+# Create or find the option types for optional benefits
+optional_benefits_option_types.each do |name|
+  find_or_create_option_type(name)
+end
+
 
 # First, run the seed for option types and option values (from the previous step)
 room_type = Spree::OptionType.find_by!(name: 'room_type')

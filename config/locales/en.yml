@@ -29,3 +29,17 @@
 
 en:
   hello: "Hello world"
+  product_modal:
+    property_images: "Property Images"
+    close: "Close"
+    switch_to_slideshow: "Switch to Slideshow"
+    switch_to_gallery: "Switch to Gallery"
+    all: "All"
+    previous: "Previous"
+    next: "Next"
+    gallery_image: "Gallery Image"
+    property_overview: "Property Overview"
+    nearby_attractions: "Nearby Attractions"
+    dining_facilities: "Dining & Facilities"
+    free_wifi: "Free Wifi"
+    coffee_tea_maker: "Coffee/Tea Maker"
