@@ -5,5 +5,7 @@
 // the compiled file.
 //
 //= require spree/frontend
+//= require shared/product_added_modal
 //= require_tree .
+
 
